@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:32:58 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/25 19:07:11 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/28 11:39:28 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MALLOC_H
 # include <stddef.h>
 # include <sys/mman.h>
+# include <unistd.h>
 
 # define TINY	(size_t)getpagesize()
 # define SMALL	(size_t)getpagesize() * 100
@@ -34,7 +35,7 @@ typedef struct		s_malloc
 typedef struct		s_page
 {
 	void			*start;
-	void			*curr;
+	void			*end;
 	size_t			length;
 	t_malloc		*mem;
 	struct s_page	*next;

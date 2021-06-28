@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/22 14:41:12 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/25 19:38:15 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/25 20:22:22 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,26 @@ void	show_alloc_mem(void)
 	{
 		ft_printf("TINY : %p (%dB/%dB)\n", page->start,
 		page->length, TINY);
+		show_page_content(page);
+		page = page->next;
+		i++;
+	}
+	page = g_memory.small;
+	i = 0;
+	while (i < g_memory.nb_small)
+	{
+		ft_printf("SMALL : %p (%dB/%dB)\n", page->start,
+		page->length, SMALL);
+		show_page_content(page);
+		page = page->next;
+		i++;
+	}
+	page = g_memory.large;
+	i = 0;
+	while (i < g_memory.nb_large)
+	{
+		ft_printf("LARGE : %p (%dB/%dB)\n", page->start,
+		page->length, LARGE);
 		show_page_content(page);
 		page = page->next;
 		i++;
