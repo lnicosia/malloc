@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:29:55 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/28 12:00:59 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/28 12:24:48 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ int		main(int ac, char **av)
 	ft_printf("{yellow}Freeing 2nd address{reset}\n");
 	free2(text2);
 	show_alloc_mem();
+	free2(text);free2(text3);free2(text4);free2(text5);free2(text6);free2(text7);
+	show_alloc_mem();
+	//char *text8 = (char*)malloc2(5);
+	//show_alloc_mem();
 	(void)ac;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:32:58 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/28 11:39:28 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/28 12:16:59 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct		s_malloc
 	void			*start;
 	void			*end;
 	size_t			size;
+	size_t			used;
 	struct s_malloc	*next;
 }					t_malloc;
 
@@ -36,7 +37,7 @@ typedef struct		s_page
 {
 	void			*start;
 	void			*end;
-	size_t			length;
+	size_t			used_space;
 	t_malloc		*mem;
 	struct s_page	*next;
 }					t_page;

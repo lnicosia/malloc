@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/22 14:41:12 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/25 20:22:22 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/28 12:22:12 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@ void	show_page_content(t_page *page)
 	mem = page->mem;
 	while (mem)
 	{
-		ft_printf("%p - %p : %d bytes\n", mem->start, mem->end, mem->size);
+		ft_printf("%p - %p : ", mem->start, mem->end);
+		if (mem->used == 1)
+			ft_printf("{cyan}%d bytes{reset}\n", mem->size);
+		else
+			ft_printf("{green}AVAILABLE{reset}\n");
 		mem = mem->next;
 	}
 }
@@ -37,8 +41,8 @@ void	show_alloc_mem(void)
 	i = 0;
 	while (i < g_memory.nb_tiny)
 	{
-		ft_printf("TINY : %p (%dB/%dB)\n", page->start,
-		page->length, TINY);
+		ft_printf("{bold}TINY : %p {cyan}(%dB/%dB){reset}\n", page->start,
+		page->used_space, TINY);
 		show_page_content(page);
 		page = page->next;
 		i++;
@@ -47,8 +51,8 @@ void	show_alloc_mem(void)
 	i = 0;
 	while (i < g_memory.nb_small)
 	{
-		ft_printf("SMALL : %p (%dB/%dB)\n", page->start,
-		page->length, SMALL);
+		ft_printf("{bold}SMALL : %p {cyan}(%dB/%dB){reset}\n", page->start,
+		page->used_space, SMALL);
 		show_page_content(page);
 		page = page->next;
 		i++;
@@ -57,8 +61,8 @@ void	show_alloc_mem(void)
 	i = 0;
 	while (i < g_memory.nb_large)
 	{
-		ft_printf("LARGE : %p (%dB/%dB)\n", page->start,
-		page->length, LARGE);
+		ft_printf("{bold}LARGE : %p {cyan}(%dB/%dB){reset}\n", page->start,
+		page->used_space, LARGE);
 		show_page_content(page);
 		page = page->next;
 		i++;

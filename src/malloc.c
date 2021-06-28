@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:34:08 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/28 11:53:52 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/28 12:17:25 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,13 @@ void	*new_malloc(size_t type, size_t size)
 		ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
 	page->start = ptr;
 	page->end = ptr + size;
-	page->length = size;
+	page->used_space = size;
 	if (!(new = mmap(0, sizeof(t_malloc), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0)))
 		return (fatal_error());
 	new->start = ptr;
 	new->end = ptr + size;
 	new->size = size;
+	new->used = 1;
 	page->mem = new;
 	return (ptr);
 }
@@ -114,7 +115,7 @@ void	*malloc2(size_t size)
 		{
 			// If we can fit the new alloc between two existing ones
 			// let's do it
-			if (mem->end != mem->next->start
+			if (mem->used == 0 && mem->end != mem->next->start
 				&& (long int)size <= mem->next->start - mem->end )
 			{
 				if (!(new = mmap(0, sizeof(t_malloc),
@@ -123,6 +124,7 @@ void	*malloc2(size_t size)
 				new->start = mem->end;
 				new->end = new->start + size;
 				new->size = size;
+				new->used = 1;
 				new->next = mem->next;
 				mem->next = new;
 				return (new->start);
@@ -131,7 +133,7 @@ void	*malloc2(size_t size)
 		}
 		// No defragmentation possible
 		// let's check if we have some place left after it
-		if (page->length + size <= type)
+		if (page->used_space + size <= type)
 		{
 			mem = page->mem;
 			while (mem && mem->next)
@@ -141,10 +143,11 @@ void	*malloc2(size_t size)
 				return (fatal_error());
 			new->start = page->end;
 			// Incr length and the ptr
-			page->length += size;
+			page->used_space += size;
 			page->end += size;
 			new->end = page->end;
 			new->size = size;
+			new->used = 1;
 			// Connect the list
 			if (!page->mem)
 				page->mem = new;

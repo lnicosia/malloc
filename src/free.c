@@ -6,64 +6,81 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 12:53:00 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/28 12:04:31 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/28 12:28:27 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #include "libft.h"
 
-void	check_page(void *ptr, t_page *page)
+int		is_page_empty(t_page *page)
 {
 	t_malloc	*mem;
-	t_malloc	**to_remove;
 
-	ft_printf("Checking page %p\n", page->start);
+	mem = page->mem;
+	while (mem)
+	{
+		if (mem->used == 1)
+			return (0);
+		mem = mem->next;
+	}
+	return (1);
+}
+
+void	remove_page(t_page *page)
+{
+	(void)page;
+}
+
+int		check_page(void *ptr, t_page *page)
+{
+	t_malloc	*mem;
+
 	while (page)
 	{
 		// Check if our ptr is in this page
 		if (ptr >= page->start && ptr <= page->start + TINY)
 		{
-			ft_printf("Our ptr is in this page\n");
 			mem = page->mem;
 			while (mem)
 			{
-				// Check if the next node is our ptr
-				if (mem->next)
-				{
-					// It is, let's remove it
-					if (mem->next->start == ptr)
-					{
-						to_remove = &mem->next;
-						mem->next = mem->next->next;
-						if (munmap(*to_remove, sizeof(*to_remove)))
-						{
-							return ;
-							ft_perror("Unmap error:");
-						}
-						return ;
-					}
-				}
-				// Case where we only have one alloc in the page
+				// Case where the first alloc is our ptr
 				if (mem->start == ptr)
 				{
-					
+					mem->used = 0;
+					page->used_space -= mem->size;
+					return (1);
 				}
 				mem = mem->next;
 			}
 		}
 		page = page->next;
 	}
+	return (0);
 }
 
 void	free2(void *ptr)
 {
 	if (!ptr)
 		return ;
-	ft_printf("Freeing %p\n", ptr);
-	check_page(ptr, g_memory.tiny);
-	check_page(ptr, g_memory.small);
-	check_page(ptr, g_memory.large);
+	if (check_page(ptr, g_memory.tiny))
+	{
+		if (is_page_empty(g_memory.tiny))
+			remove_page(g_memory.tiny);
+		return ;
+	}
+	if (check_page(ptr, g_memory.small))
+	{
+		if (is_page_empty(g_memory.small))
+			remove_page(g_memory.small);
+		return ;
+	}
+	if (check_page(ptr, g_memory.large))
+	{
+		if (is_page_empty(g_memory.large))
+			remove_page(g_memory.large);
+		return ;
+	}
 }
 
 void	*fatal_error(void)
