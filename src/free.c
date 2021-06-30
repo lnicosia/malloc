@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 12:53:00 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/28 12:28:27 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/30 11:40:11 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,32 +27,93 @@ int		is_page_empty(t_page *page)
 	return (1);
 }
 
-void	remove_page(t_page *page)
+void	remove_page(t_page *page, size_t type)
 {
-	(void)page;
+	// Unmapping the actual memory
+	if (type != LARGE)
+		munmap(page->start, type);
+	else
+		munmap(page->start, page->used_space);
+	if (type == TINY)
+		g_memory.tiny = page->next;
+	else if (type == SMALL)
+		g_memory.small = page->next;
+	else
+		g_memory.large = page->next;
+	// Unmapping the metadata
+	munmap(page, sizeof(*page));
 }
 
-int		check_page(void *ptr, t_page *page)
+int		check_page(void *ptr, t_page *page, size_t type)
 {
 	t_malloc	*mem;
+	t_page		*to_remove;
 
 	while (page)
 	{
-		// Check if our ptr is in this page
-		if (ptr >= page->start && ptr <= page->start + TINY)
+		// Check if the ptr is in the next page so we can remove the node
+		// easily if empty afterwards
+		if (page->next && (ptr >= page->next->start
+			&& ptr <= page->next->start + type))
+		{
+			mem = page->next->mem;
+			while (mem)
+			{
+				if (mem->start == ptr)
+				{
+					mem->used = 0;
+					// If large type, keep the total size
+					if (type != LARGE)
+						page->next->used_space -= mem->size;
+					break ;
+				}
+				mem = mem->next;
+			}
+			// If our plage is now empty, unmap it
+			if (page->next->used_space == 0 || type == LARGE)
+			{
+				to_remove = page->next;
+				page->next = page->next->next;
+				// Unmapping the actual memory
+				if (type != LARGE)
+					munmap(to_remove, type);
+				else
+					munmap(to_remove,
+					to_remove->used_space + PAGE_METADATA + BLOCK_METADATA);
+			}
+			return (1);
+		}
+		// Specific case if the ptr is in the first page
+		if (ptr >= page->start && ptr <= page->start + type)
 		{
 			mem = page->mem;
 			while (mem)
 			{
-				// Case where the first alloc is our ptr
 				if (mem->start == ptr)
 				{
 					mem->used = 0;
-					page->used_space -= mem->size;
-					return (1);
+					// If large type, keep the total size
+					if (type != LARGE)
+						page->used_space -= mem->size;
+					break ;
 				}
 				mem = mem->next;
 			}
+			if (page->used_space == 0 || type == LARGE)
+			{
+				if (type == TINY)
+					g_memory.tiny = page->next;
+				else if (type == SMALL)
+					g_memory.small = page->next;
+				else
+					g_memory.large = page->next;
+				// Unmapping the actual memory
+				if (type != LARGE)
+					munmap(page, type);
+				else
+					munmap(page, page->used_space + PAGE_METADATA + BLOCK_METADATA);
+			}
+			return (1);
 		}
 		page = page->next;
 	}
@@ -63,22 +124,17 @@ void	free2(void *ptr)
 {
 	if (!ptr)
 		return ;
-	if (check_page(ptr, g_memory.tiny))
+	if (check_page(ptr, g_memory.tiny, TINY))
 	{
-		if (is_page_empty(g_memory.tiny))
-			remove_page(g_memory.tiny);
 		return ;
 	}
-	if (check_page(ptr, g_memory.small))
+	if (check_page(ptr, g_memory.small, SMALL))
 	{
-		if (is_page_empty(g_memory.small))
-			remove_page(g_memory.small);
 		return ;
 	}
-	if (check_page(ptr, g_memory.large))
+	// Specific case for large ones, need to remove the page directly
+	if (check_page(ptr, g_memory.large, LARGE))
 	{
-		if (is_page_empty(g_memory.large))
-			remove_page(g_memory.large);
 		return ;
 	}
 }

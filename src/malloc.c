@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:34:08 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/28 12:17:25 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/30 11:38:32 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,87 +14,64 @@
 #define EXTERN
 #include "malloc.h"
 
-int		new_metadata(size_t type)
+void	*new_page(size_t size, size_t type)
 {
 	t_page	*page;
 	t_page	**page_addr;
 	t_page	*new;
+	size_t	map_size;
 
 	if (type == TINY)
 	{
 		page = g_memory.tiny;
 		page_addr = &g_memory.tiny;
-		g_memory.nb_tiny++;
+		map_size = type;
 	}
 	else if (type == SMALL)
 	{
 		page = g_memory.small;
 		page_addr = &g_memory.small;
-		g_memory.nb_small++;
+		map_size = type;
 	}
 	else
 	{
 		page = g_memory.large;
 		page_addr = &g_memory.large;
-		g_memory.nb_large++;
+		map_size = size + PAGE_METADATA + BLOCK_METADATA;
 	}
 	while (page && page->next)
 			page = page->next;
-	if (!(new = mmap(0, sizeof(t_page), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0)))
-		return (-1);
+	if ((new = mmap(0, map_size, PROT_READ | PROT_WRITE,
+		MAP_ANONYMOUS | MAP_SHARED, -1, 0)) == MAP_FAILED)
+	{
+		ft_perror("Map error:");
+		return (0);
+	}
+	new->start = new;
+	new->used_space = size;
+	new->mem = new->start + PAGE_METADATA;
+	new->mem->start = new->start + PAGE_METADATA + BLOCK_METADATA;
+	new->mem->size = size;
+	new->mem->used = 1;
 	if (!page)
 		*page_addr = new;
 	else
 		page->next = new;
-	return (0);
-}
-
-void	*new_malloc(size_t type, size_t size)
-{
-	t_page		*page;
-	t_malloc	*new;
-	void		*ptr;
-
-	ptr = NULL;
-	new = NULL;
-	if (type == TINY)
-		page = g_memory.tiny;		
-	else if (type == SMALL)
-		page = g_memory.small;		
-	else
-		page = g_memory.large;
-	while (page->next)
-		page = page->next;
-	if (type != LARGE)
-		ptr = mmap(0, type, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
-	else
-		ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
-	page->start = ptr;
-	page->end = ptr + size;
-	page->used_space = size;
-	if (!(new = mmap(0, sizeof(t_malloc), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0)))
-		return (fatal_error());
-	new->start = ptr;
-	new->end = ptr + size;
-	new->size = size;
-	new->used = 1;
-	page->mem = new;
-	return (ptr);
+	return (new->mem->start);
 }
 
 void	*malloc2(size_t size)
 {
 	t_page		*page;
-	t_malloc	*new;
 	t_malloc	*mem;
 	size_t		type;
 
-	if (size <= TINY / 100)
+	if (size <= TINY_BLOCK)
 	{
 		page = g_memory.tiny;
 		type = TINY;
 	}
-	else if (size <= SMALL / 100)
+	else if (size <= SMALL_BLOCK)
 	{
 		page = g_memory.small;
 		type = SMALL;
@@ -105,62 +82,45 @@ void	*malloc2(size_t size)
 		type = LARGE;
 	}
 	// Searching if we have some space available in our existing pages
-	while (page)
+	// except for large ones
+	while (type != LARGE && page)
 	{
-		// Defragmenting:
-		// Checking if we have some place left between our existing allocs
-		// before filling the end of the page
-		mem = page->mem;
-		while (mem && mem->next)
+		// Check if there is enough space left for a new block
+		if (page->used_space + size + BLOCK_METADATA <= type)
 		{
-			// If we can fit the new alloc between two existing ones
-			// let's do it
-			if (mem->used == 0 && mem->end != mem->next->start
-				&& (long int)size <= mem->next->start - mem->end )
-			{
-				if (!(new = mmap(0, sizeof(t_malloc),
-				PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0)))
-					return (fatal_error());
-				new->start = mem->end;
-				new->end = new->start + size;
-				new->size = size;
-				new->used = 1;
-				new->next = mem->next;
-				mem->next = new;
-				return (new->start);
-			}
-			mem = mem->next;
-		}
-		// No defragmentation possible
-		// let's check if we have some place left after it
-		if (page->used_space + size <= type)
-		{
+			// Defragmenting:
+			// Before setting up a new block, check if
+			// there is a big enough one unused
 			mem = page->mem;
 			while (mem && mem->next)
+			{
+				if (mem->used == 0 && mem->size == size)
+				{
+					mem->used = 1;
+					page->used_space += size;
+					return (mem->start);
+				}
 				mem = mem->next;
-			if (!(new = mmap(0, sizeof(t_malloc),
-				PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0)))
-				return (fatal_error());
-			new->start = page->end;
-			// Incr length and the ptr
+			}
+			// Specifi case if the first block is available
+			if (mem->used == 0 && mem->size == size)
+			{
+				mem->used = 1;
+				page->used_space += size;
+				return (mem->start);
+			}
+			mem->next = mem->start + mem->size;
+			// Cast as void so we add BLOCK_METADATA bytes
+			// and not BLOCK_METADATA * sizeof(t_malloc)
+			mem->next->start = (void*)mem->next + BLOCK_METADATA;
+			mem->next->size = size;
+			mem->next->used = 1;
 			page->used_space += size;
-			page->end += size;
-			new->end = page->end;
-			new->size = size;
-			new->used = 1;
-			// Connect the list
-			if (!page->mem)
-				page->mem = new;
-			else
-				mem->next = new;
-			// return the original ptr
-			return (new->start);
+			return (mem->next->start);
 		}
 		page = page->next;
 	}
 	// We didnt find any space in our existing plage, let's create some
 	// Failed to create a new page metadata
-	if (new_metadata(type))
-		return (fatal_error());
-	return (new_malloc(type, size));
+	return (new_page(size, type));
 }
