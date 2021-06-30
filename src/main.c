@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:29:55 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/30 11:45:59 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/30 21:17:58 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,20 @@ int		main(int ac, char **av)
 	ft_printf("Size of LARGE page: %d\n", LARGE);
 	ft_printf("Max size of LARGE blocks: %d\n\n", LARGE_BLOCK);
 
-	char	*text = (char*)malloc2(10);
-	if (!text)
-		ft_printf("Error\n");
-	/*for (int i = 0; i < 420; i++)
+	/*char	*text[129];
+	for (int i = 0; i < 129; i++)
 	{
 		ft_printf("i = %d\n", i);
-		char	*text1 = (char*)malloc2(10);
-		(void)text1;
-		//ft_printf("text1 addrr = %p\n", text1);
-	}*/
+		text[i] = (char*)malloc2(95);
+	}
+	show_alloc_mem();
+	for (int i = 0; i < 129; i++)
+	{
+		ft_printf("i = %d\n", i);
+		free2(text[i]);
+	}
+	show_alloc_mem();*/
+	char *text = (char*)malloc2(10);
 	char *text2 = (char*)malloc2(5);
 	char *text3 = (char*)malloc2(2);
 	char *text4 = (char*)malloc2(40);

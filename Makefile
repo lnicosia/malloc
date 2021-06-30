@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/06/22 15:31:35 by lnicosia         ###   ########.fr        #
+#    Updated: 2021/06/30 11:56:23 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ LDFLAGS = -L $(LIBFT_DIR)
 
 LIB_RAW = 
 
-SRC_RAW =	malloc.c free.c show_alloc_mem.c
+SRC_RAW =	malloc.c free.c show_alloc_mem.c realloc.c
 
 HEADERS =	malloc.h
 

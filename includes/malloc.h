@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:32:58 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/30 11:41:58 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/06/30 14:40:37 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 # define TINY			(size_t)getpagesize() * 4
 # define SMALL			(size_t)getpagesize() * 400
 # define LARGE			(size_t)getpagesize() * 4000
-# define TINY_BLOCK		(TINY - PAGE_METADATA) / 100 - BLOCK_METADATA
-# define SMALL_BLOCK	(SMALL - PAGE_METADATA) / 100 - BLOCK_METADATA
-# define LARGE_BLOCK	(LARGE - PAGE_METADATA) / 100 - BLOCK_METADATA
+# define TINY_BLOCK		(TINY - PAGE_METADATA) / 128 - BLOCK_METADATA
+# define SMALL_BLOCK	(SMALL - PAGE_METADATA) / 128 - BLOCK_METADATA
+# define LARGE_BLOCK	(LARGE - PAGE_METADATA) / 128 - BLOCK_METADATA
 
 # ifndef EXTERN
 #  define EXTERN extern
@@ -57,7 +57,7 @@ EXTERN t_memory		g_memory;
 
 void		free2(void *ptr);
 void		*malloc2(size_t size);
-void		*realloc(void *ptr, size_t size);
+void		*realloc2(void *ptr, size_t size);
 void		show_alloc_mem(void);
 void		*fatal_error(void);
 
