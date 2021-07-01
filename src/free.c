@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 12:53:00 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/01 09:28:38 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/01 17:10:02 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 int		check_page(void *ptr, t_page *page, size_t type)
 {
 	t_malloc	*mem;
+	t_malloc	*prev_mem;
 	t_page		*prev;
 
 	prev = NULL;
@@ -25,6 +26,7 @@ int		check_page(void *ptr, t_page *page, size_t type)
 		// easily if empty afterwards
 		if (ptr >= page->start && ptr <= page->start + type)
 		{
+			prev_mem = NULL;
 			mem = page->mem;
 			while (mem)
 			{
@@ -34,8 +36,21 @@ int		check_page(void *ptr, t_page *page, size_t type)
 					// If large type, keep the total size
 					if (type != LARGE)
 						page->used_space -= mem->size + BLOCK_METADATA;
+					// If the block before is free, merge with it
+					if (prev_mem && prev_mem->used == 0)
+					{
+						prev_mem->size += mem->size + BLOCK_METADATA;
+						prev_mem->next = mem->next;
+					}
+					// If the block after is free, merge with it
+					if (mem->next && mem->next->used == 0)
+					{
+						mem->size += mem->next->size + BLOCK_METADATA;
+						mem->next = mem->next->next;
+					}
 					break ;
 				}
+				prev_mem = mem;
 				mem = mem->next;
 			}
 			// If our plage is now empty, unmap it

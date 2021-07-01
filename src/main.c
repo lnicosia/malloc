@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:29:55 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/01 16:25:07 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/01 17:13:46 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int		main(int ac, char **av)
 	free2(text8);ft_printf("Free ok\n");show_alloc_mem();*/
 
 	//-- REALLOC TEST --//
-	char	*text = (char*)malloc2(90000);
+	/*char	*text = (char*)malloc2(90000);
 	ft_strcpy(text, "bonjo");
 	ft_printf("Text = %p (%s)\n", text, text);
 	show_alloc_mem();
@@ -92,6 +92,21 @@ int		main(int ac, char **av)
 	show_alloc_mem();
 	free2(text);
 	ft_printf("Free\n");
+	show_alloc_mem();*/
+
+	//-- FREE DEFRAGMENTATION TEST --//
+
+	void	*ptr = malloc2(50);
+	void	*ptr2 = malloc2(50);
+	void	*ptr3 = malloc2(50);
+	void	*ptr4 = malloc2(50);
+	show_alloc_mem();
+	ft_printf("\nFreeing ptr2 and 3\n");
+	free2(ptr4);
+	free2(ptr3);
+	show_alloc_mem();
+	ft_printf("\nNew malloc\n");
+	void *ptr5 = malloc2(90);
 	show_alloc_mem();
 
 	//-- DEFRAG TEST --//
