@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/22 14:41:12 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/30 10:16:30 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/01 13:53:49 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void	show_page_content(t_page *page)
 	while (mem)
 	{
 		ft_printf("%p - %p : ", mem->start, mem->start + mem->size);
-		if (mem->used == 1)
-			ft_printf("{cyan}%d bytes{reset}\n", mem->size);
-		else
-			ft_printf("{green}AVAILABLE{reset}\n");
+		ft_printf("{cyan}%d bytes{reset}", mem->size);
+		if (mem->used == 0)
+			ft_printf("{green} (FREE){reset}");
+		ft_printf("\n");
 		mem = mem->next;
 	}
 }

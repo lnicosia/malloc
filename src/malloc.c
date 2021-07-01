@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:34:08 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/30 16:06:51 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/01 14:01:47 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,12 @@ void	*malloc2(size_t size)
 			mem = page->mem;
 			while (mem)
 			{
-				if (mem->used == 0 && mem->size == size)
+				if (mem->used == 0 && mem->size >= size)
 				{
+					// If we're not gonna use all the space
+					// and we can create a new block after this one, do it
+					if (mem->size - size > 32)
+						new_block(mem, size);
 					mem->used = 1;
 					page->used_space += size + BLOCK_METADATA;
 					return (mem->start);
@@ -110,7 +114,7 @@ void	*malloc2(size_t size)
 			if (prev == NULL)
 				prev = mem;
 			prev->next = prev->start + prev->size;
-			// Cast as void so we add BLOCK_METADATA bytes
+			// Cast as void* so we add BLOCK_METADATA bytes
 			// and not BLOCK_METADATA * sizeof(t_malloc)
 			prev->next->start = (void*)prev->next + BLOCK_METADATA;
 			prev->next->size = size;

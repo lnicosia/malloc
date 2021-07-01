@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:29:55 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/06/30 21:17:58 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/01 15:22:13 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int		main(int ac, char **av)
 	ft_printf("Size of LARGE page: %d\n", LARGE);
 	ft_printf("Max size of LARGE blocks: %d\n\n", LARGE_BLOCK);
 
+	//-- FILL PAGE TEST --//
 	/*char	*text[129];
 	for (int i = 0; i < 129; i++)
 	{
@@ -43,7 +44,9 @@ int		main(int ac, char **av)
 		free2(text[i]);
 	}
 	show_alloc_mem();*/
-	char *text = (char*)malloc2(10);
+	
+	//-- BASIC TEST --//
+	/*char *text = (char*)malloc2(10);
 	char *text2 = (char*)malloc2(5);
 	char *text3 = (char*)malloc2(2);
 	char *text4 = (char*)malloc2(40);
@@ -76,6 +79,40 @@ int		main(int ac, char **av)
 	ft_printf("{bold}{yellow}Freeing text6{reset}\n");
 	free2(text6);ft_printf("Free ok\n");show_alloc_mem();
 	ft_printf("{bold}{yellow}Freeing text8{reset}\n");
-	free2(text8);ft_printf("Free ok\n");show_alloc_mem();
+	free2(text8);ft_printf("Free ok\n");show_alloc_mem();*/
+
+	//-- REALLOC TEST --//
+	/*char	*text = (char*)malloc2(90);
+	ft_strcpy(text, "bonjo");
+	ft_printf("Text = %p (%s)\n", text, text);
+	show_alloc_mem();
+	text = (char*)realloc2(text, 57);
+	text[3] = 0;
+	ft_printf("Text = %p (%s)\n", text, text);
+	show_alloc_mem();
+	free2(text);
+	ft_printf("Free\n");
+	show_alloc_mem();*/
+
+	//-- DEFRAG TEST --//
+	char	*text = (char*)malloc2(90);
+	char	*text2 = (char*)malloc2(90);
+	char	*text3 = (char*)malloc2(90);
+	show_alloc_mem();
+	free2(text2);
+	ft_printf("Free\n");
+	show_alloc_mem();
+	text2 = (char*)malloc2(57);
+	ft_printf("New malloc\n");
+	show_alloc_mem();
+	free2(text2);
+	ft_printf("Free\n");
+	show_alloc_mem();
+	text2 = (char*)malloc2(1);
+	ft_printf("New malloc\n");
+	show_alloc_mem();
+	free2(text2);
+	ft_printf("Free\n");
+	show_alloc_mem();
 	return (0);
 }
