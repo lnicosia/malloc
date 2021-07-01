@@ -6,30 +6,17 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:52:52 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/01 14:14:32 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/01 16:29:43 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #include "libft.h"
 
-void	*realloc_large(void *ptr, size_t size)
-{
-	/*void	*new;
-
-	new = NULL;
-	if (!(new = malloc2(size)))
-		return (0);
-	free2(ptr);
-	return (new);*/
-	(void)ptr;
-	(void)size;
-	return (0);
-}
-
 void	*find_in_page(void *ptr, size_t size, t_page *page)
 {
 	t_malloc	*mem;
+	void		*res;
 
 	while (page)
 	{
@@ -40,18 +27,20 @@ void	*find_in_page(void *ptr, size_t size, t_page *page)
 			{
 				if (mem->start == ptr)
 				{
-					ft_printf("Found ptr (prev size = %d)\n", mem->size);
-					// Case where a smaller size is requiered
-					if (size <= mem->size)
+					if (size <= mem->size && mem->size <= SMALL_BLOCK)
 					{
-						ft_printf("New size fits in the block\n");
 						// Defragmentation:
 						// if we can fit a new block, do it
 						if (mem->size - size > 32)
-						{
 							new_block(mem, size);
-						}
 						return (mem->start);
+					}
+					else
+					{
+						res = malloc2(size);
+						ft_memcpy(res, mem->start, mem->size);
+						free2(ptr);
+						return (res);
 					}
 					return (0);
 				}

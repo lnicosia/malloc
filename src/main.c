@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:29:55 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/01 15:22:13 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/01 16:25:07 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,20 +82,20 @@ int		main(int ac, char **av)
 	free2(text8);ft_printf("Free ok\n");show_alloc_mem();*/
 
 	//-- REALLOC TEST --//
-	/*char	*text = (char*)malloc2(90);
+	char	*text = (char*)malloc2(90000);
 	ft_strcpy(text, "bonjo");
 	ft_printf("Text = %p (%s)\n", text, text);
 	show_alloc_mem();
-	text = (char*)realloc2(text, 57);
-	text[3] = 0;
+	text = (char*)realloc2(text, 9900);
+	//text[3] = 0;
 	ft_printf("Text = %p (%s)\n", text, text);
 	show_alloc_mem();
 	free2(text);
 	ft_printf("Free\n");
-	show_alloc_mem();*/
+	show_alloc_mem();
 
 	//-- DEFRAG TEST --//
-	char	*text = (char*)malloc2(90);
+	/*char	*text = (char*)malloc2(90);
 	char	*text2 = (char*)malloc2(90);
 	char	*text3 = (char*)malloc2(90);
 	show_alloc_mem();
@@ -113,6 +113,6 @@ int		main(int ac, char **av)
 	show_alloc_mem();
 	free2(text2);
 	ft_printf("Free\n");
-	show_alloc_mem();
+	show_alloc_mem();*/
 	return (0);
 }
