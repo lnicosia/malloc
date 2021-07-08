@@ -6,12 +6,17 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/01 11:44:20 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/01 13:58:49 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/07 11:22:08 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #include "libft.h"
+
+int		is_power_of_two(size_t nb)
+{
+	return (nb != 0 && (nb & (nb - 1)) == 0);
+}
 
 void	new_block(t_malloc *mem, size_t size)
 {

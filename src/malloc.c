@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:34:08 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/01 14:01:47 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/08 16:28:06 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 #define EXTERN
 #include "malloc.h"
 
-void	*new_page(size_t size, size_t type)
+pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void	*new_page(size_t size, size_t type, size_t alignment)
 {
 	t_page	*page;
 	t_page	**page_addr;
@@ -45,28 +47,43 @@ void	*new_page(size_t size, size_t type)
 		MAP_ANONYMOUS | MAP_SHARED, -1, 0)) == MAP_FAILED)
 	{
 		ft_perror("Map error:");
+		pthread_mutex_unlock(&g_mutex);
 		return (0);
 	}
 	new->start = new;
 	new->used_space = size + PAGE_METADATA + BLOCK_METADATA;
 	new->mem = new->start + PAGE_METADATA;
 	new->mem->start = new->start + PAGE_METADATA + BLOCK_METADATA;
+	if ((size_t)new->mem->start % alignment != 0)
+		new->mem->start += alignment - (size_t)new->mem->start % alignment;
+	if ((size_t)new->mem->start % alignment != 0)
+		ft_printf("T'as foiré ton calcul connard\n");
+	new->mem = new->mem->start - BLOCK_METADATA;
 	new->mem->size = size;
 	new->mem->used = 1;
 	if (!page)
 		*page_addr = new;
 	else
 		page->next = new;
+	ft_printf("New page:\n");
+	//show_alloc_mem();
+	pthread_mutex_unlock(&g_mutex);
 	return (new->mem->start);
 }
 
-void	*malloc2(size_t size)
+// Main function that takes the wanted alignment as arg
+void	*memalign(size_t alignment, size_t size)
 {
 	t_page		*page;
 	t_malloc	*mem;
 	t_malloc	*prev;
+	void		*aligned_ptr;
 	size_t		type;
 
+	if (!is_power_of_two(alignment))
+		return (NULL);
+	pthread_mutex_lock(&g_mutex);
+	ft_printf("\nMalloc of %d\n", size);
 	if (size <= TINY_BLOCK)
 	{
 		page = g_memory.tiny;
@@ -98,33 +115,79 @@ void	*malloc2(size_t size)
 			{
 				if (mem->used == 0 && mem->size >= size)
 				{
-					// If we're not gonna use all the space
-					// and we can create a new block after this one, do it
-					if (mem->size - size > 32)
-						new_block(mem, size);
-					mem->used = 1;
-					page->used_space += size + BLOCK_METADATA;
-					return (mem->start);
+					// We found a free block with enough space
+					aligned_ptr = mem->start;
+					if ((size_t)aligned_ptr % alignment != 0)
+						aligned_ptr += alignment - (size_t)aligned_ptr % alignment;
+					if ((size_t)aligned_ptr % alignment != 0)
+						ft_printf("T'as foiré ton calcul connard\n");
+					// We can still use the block only if there is no
+					// node after it and still enough place in the page
+					// OR if there is a node after it and still enough space
+					// before it
+					if ((!mem->next && (size_t)aligned_ptr + size <= type)
+						|| ((size_t)mem->next - (size_t)aligned_ptr >= size))
+					{
+						mem->start = aligned_ptr;
+						// Don't forget to update prev
+						if (prev)
+						{
+							prev->next = mem->start - BLOCK_METADATA;
+							prev->size = (size_t)prev->next - (size_t)prev->start;
+						}
+						else
+							page->mem = mem->start - BLOCK_METADATA;
+						// If we're not gonna use all the space
+						// and we can create a new block after this one, do it
+						// (without breaking the alignment of course)
+						if (mem->size - size > BLOCK_METADATA
+							&& mem->size - size % 16 == 0)
+							new_block(mem, size);
+						mem->used = 1;
+						page->used_space += mem->size + BLOCK_METADATA;
+						ft_printf("Free space used:\n");
+						//show_alloc_mem();
+						ft_printf("Returning %p\n", mem->start);
+						pthread_mutex_unlock(&g_mutex);
+						return (mem->start);
+					}
 				}
 				// Save prev node to connect the new one with it
 				prev = mem;
 				mem = mem->next;
 			}
-			// Specific case when we have only one node
-			if (prev == NULL)
-				prev = mem;
-			prev->next = prev->start + prev->size;
-			// Cast as void* so we add BLOCK_METADATA bytes
-			// and not BLOCK_METADATA * sizeof(t_malloc)
-			prev->next->start = (void*)prev->next + BLOCK_METADATA;
-			prev->next->size = size;
-			prev->next->used = 1;
-			page->used_space += size + BLOCK_METADATA;
-			return (prev->next->start);
+			aligned_ptr = prev->start + prev->size + BLOCK_METADATA;
+			if ((size_t)aligned_ptr % alignment != 0)
+				aligned_ptr += alignment - (size_t)aligned_ptr % alignment;
+			if ((size_t)aligned_ptr % alignment != 0)
+				ft_printf("T'as foiré ton calcul connard\n");
+			// Check if we have enough space left at the end of the page
+			if (aligned_ptr + size <= page->start + type)
+			{
+				prev->next = aligned_ptr - BLOCK_METADATA;
+				// Cast as void* so we add BLOCK_METADATA bytes
+				// and not BLOCK_METADATA * sizeof(t_malloc)
+				prev->next->start = aligned_ptr;
+				prev->next->size = size;
+				prev->next->used = 1;
+				prev->next->next = NULL;
+				page->used_space += size + BLOCK_METADATA;
+				//ft_printf("New block\n");
+				//show_alloc_mem();
+				ft_printf("New block ok, returning");
+				ft_printf(" (%p)\n", prev->next->start);
+				pthread_mutex_unlock(&g_mutex);
+				return (prev->next->start);
+			}
 		}
 		page = page->next;
 	}
 	// We didnt find any space in our existing plage, let's create some
 	// Failed to create a new page metadata
-	return (new_page(size, type));
+	return (new_page(size, type, alignment));
+}
+
+void	*malloc(size_t size)
+{
+	return (memalign(16, size));
 }

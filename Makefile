@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/07/01 11:44:14 by lnicosia         ###   ########.fr        #
+#    Updated: 2021/07/07 11:06:11 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,8 @@ LDFLAGS = -L $(LIBFT_DIR)
 
 LIB_RAW = 
 
-SRC_RAW =	malloc.c free.c show_alloc_mem.c realloc.c utils.c
+SRC_RAW =	malloc.c free.c show_alloc_mem.c realloc.c utils.c \
+			others.c
 
 HEADERS =	malloc.h
 
@@ -61,8 +62,8 @@ OPTI_FLAGS = -O3
 CFLAGS =	-Wall -Wextra -Werror -Wpadded -Wconversion -I $(INCLUDES_DIR) \
 	  	-I $(LIBFT_DIR)/includes -I $(BMP_PARSER_DIR)/includes \
 		-I $(LIBMFT_DIR)/includes -I $(GLAD_DIR)/include \
-		$(OPTI_FLAGS) \
-		#-fsanitize=address -g3 \
+		-g3 -fPIC\
+		#$(OPTI_FLAGS) \
 		
 	
 #
