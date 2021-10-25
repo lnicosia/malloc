@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:32:58 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/08 16:14:25 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/13 17:12:11 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,16 @@ void		*malloc(size_t size);
 void		*calloc(size_t nmemb, size_t size);
 void		*realloc(void *ptr, size_t size);
 void		*reallocf(void *ptr, size_t size);
+void		*reallocarray(void *ptr, size_t nmemb, size_t size);
 int			posix_memalign(void **memptr, size_t alignment, size_t size);
 void		*aligned_alloc(size_t alignment, size_t size);
 void		*valloc(size_t size);
+void		*pvalloc(size_t size);
 void		show_alloc_mem(void);
+void		show_alloc_mem_plus(void);
+void		show_alloc_mem_ex(void);
 void		*fatal_error(void);
-void		new_block(t_malloc *mem, size_t size);
+void		new_block(t_malloc *mem, size_t alignment, size_t size);
 int			is_power_of_two(size_t nb);
 
 #endif

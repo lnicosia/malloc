@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:29:55 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/08 14:02:01 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/13 15:49:18 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ int		main(int ac, char **av)
 		text[i] = (char*)malloc(40);
 	}
 	text[227][4] = 4;
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	for (int i = 0; i < 250; i++)
 	{
 		ft_printf("i = %d\n", i);
 		free(text[i]);
 	}
-	show_alloc_mem();*/
+	show_alloc_mem_plus();*/
 	
 	//-- BASIC TEST --//
 	/*if (ac < 2)
@@ -62,45 +62,45 @@ int		main(int ac, char **av)
 	ft_bzero(text, ft_strlen(av[1] + 1));
 	ft_strcpy(text, av[1]);
 	ft_putendl(text);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text2{reset}\n");
-	free(text2);ft_printf("Free ok\n");show_alloc_mem();
+	free(text2);ft_printf("Free ok\n");show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text{reset}\n");
-	free(text);ft_printf("Free ok\n");show_alloc_mem();
+	free(text);ft_printf("Free ok\n");show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text3{reset}\n");
-	free(text3);ft_printf("Free ok\n");show_alloc_mem();
+	free(text3);ft_printf("Free ok\n");show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text4{reset}\n");
-	free(text4);ft_printf("Free ok\n");show_alloc_mem();
+	free(text4);ft_printf("Free ok\n");show_alloc_mem_plus();
 	char *text9 = (char*)malloc(5);
 	ft_printf("{bold}{yellow}New malloc{reset}\n");
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text5{reset}\n");
-	free(text5);ft_printf("Free ok\n");show_alloc_mem();
+	free(text5);ft_printf("Free ok\n");show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text9{reset}\n");
-	free(text9);ft_printf("Free ok\n");show_alloc_mem();
+	free(text9);ft_printf("Free ok\n");show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text7{reset}\n");
-	free(text7);ft_printf("Free ok\n");show_alloc_mem();
+	free(text7);ft_printf("Free ok\n");show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text6{reset}\n");
-	free(text6);ft_printf("Free ok\n");show_alloc_mem();
+	free(text6);ft_printf("Free ok\n");show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text8{reset}\n");
-	free(text8);ft_printf("Free ok\n");show_alloc_mem();*/
+	free(text8);ft_printf("Free ok\n");show_alloc_mem_plus();*/
 
 	//-- REALLOC TEST --//
 	/*char	*text = (char*)malloc(90000);
 	ft_strcpy(text, "bonjo");
 	ft_printf("Text = %p (%s)\n", text, text);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	text = (char*)realloc(text, 9900);
 	//text[3] = 0;
 	ft_printf("Text = %p (%s)\n", text, text);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	free(text);
 	ft_printf("Free\n");
-	show_alloc_mem();*/
+	show_alloc_mem_plus();*/
 
 	/*char	*text1 = (char*)malloc(40000);
 	char	*text2 = (char*)malloc(32816);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	ft_printf("Free\n");
 	free(text2);*/
 
@@ -177,7 +177,7 @@ int		main(int ac, char **av)
 	for (int i = 11; i < 100; i++)
 	{
 		text = (char*)realloc(text, i);
-		show_alloc_mem();
+		show_alloc_mem_plus();
 	}*/
 
 
@@ -185,21 +185,21 @@ int		main(int ac, char **av)
 	/*char	*text = (char*)malloc(10);
 	char	*text2 = (char*)malloc(10);
 	char	*text3 = (char*)malloc(10);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	free(text2);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	text = (char*)realloc(text, 11);
-	show_alloc_mem();*/
+	show_alloc_mem_plus();*/
 
 	/*char	*text = (char*)malloc(10);
 	char	*text2 = (char*)malloc(20);
-	ft_printf("Mem after malloc:\n"); show_alloc_mem(); ft_printf("\n");
+	ft_printf("Mem after malloc:\n"); show_alloc_mem_plus(); ft_printf("\n");
 	free(text);
-	ft_printf("Mem after free:\n"); show_alloc_mem(); ft_printf("\n");
+	ft_printf("Mem after free:\n"); show_alloc_mem_plus(); ft_printf("\n");
 	text = (char*)malloc(5);
-	ft_printf("Mem after malloc:\n"); show_alloc_mem(); ft_printf("\n");
+	ft_printf("Mem after malloc:\n"); show_alloc_mem_plus(); ft_printf("\n");
 	text = (char*)realloc(text, 5);
-	ft_printf("Mem after realloc:\n"); show_alloc_mem(); ft_printf("\n");*/
+	ft_printf("Mem after realloc:\n"); show_alloc_mem_plus(); ft_printf("\n");*/
 
 	//-- FREE DEFRAGMENTATION TEST --//
 
@@ -207,43 +207,498 @@ int		main(int ac, char **av)
 	void	*ptr2 = malloc(50);
 	void	*ptr3 = malloc(50);
 	void	*ptr4 = malloc(50);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	ft_printf("\nFreeing ptr2 and 3\n");
 	free(ptr4);
 	free(ptr3);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	ft_printf("\nNew malloc\n");
 	void *ptr5 = malloc(90);
-	show_alloc_mem();*/
+	show_alloc_mem_plus();*/
 
 	//-- DEFRAG TEST --//
 	/*char	*text = (char*)malloc(90);
 	char	*text2 = (char*)malloc(90);
 	char	*text3 = (char*)malloc(90);
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	free(text2);
 	ft_printf("Free\n");
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	text2 = (char*)malloc(57);
 	ft_printf("New malloc\n");
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	free(text2);
 	ft_printf("Free\n");
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	text2 = (char*)malloc(1);
 	ft_printf("New malloc\n");
-	show_alloc_mem();
+	show_alloc_mem_plus();
 	free(text2);
 	ft_printf("Free\n");
-	show_alloc_mem();*/
+	show_alloc_mem_plus();*/
 
 	/*char	*text1 = (char*)malloc(10);
 	char	*text2 = (char*)malloc(10);
+	char	*text3 = (char*)malloc(10);
+	char	*text4 = (char*)malloc(10);
+	show_alloc_mem_plus();
 	free(text1);
 	//text1 = (char*)malloc(5);
-	//char *text3 = (char*)malloc(1);
-	show_alloc_mem();
-	free(text1);
-	show_alloc_mem();*/
+	//free(text3);
+	//text3 = (char*)malloc(1);
+	show_alloc_mem_plus();
+	free(text3);
+	show_alloc_mem_plus();
+	free(text2);
+	show_alloc_mem_plus();
+	free(text4);
+	show_alloc_mem_plus();*/
+
+	// DEFRAG TEST //
+
+	ft_printf("\n{bold}{cyan}Part 1: Reusing freed node with a different alignement{reset}\n\n");
+	void	*ptr = malloc(1000);
+	void	*ptr1 = malloc(1000);
+	void	*ptr2 = malloc(1000);
+	free(ptr1);
+	show_alloc_mem_plus();
+	ptr1 = memalign(64, 1000);
+	show_alloc_mem_plus();
+	free(ptr);show_alloc_mem_plus();
+	free(ptr1);show_alloc_mem_plus();
+	free(ptr2);show_alloc_mem_plus();
+	ft_printf("{bold}{green}Last free done. Res:\n{reset}");
+	show_alloc_mem_plus();
+
+	ft_printf("\n{bold}{cyan}Part 2: Reusing freed node with a different alignement and size{reset}\n\n");
+	ptr = malloc(1000);
+	ptr1 = malloc(1000);
+	ptr2 = malloc(1000);
+	free(ptr1);
+	show_alloc_mem_plus();
+	ptr1 = memalign(64, 512);
+	show_alloc_mem_plus();
+	free(ptr);show_alloc_mem_plus();
+	free(ptr1);show_alloc_mem_plus();
+	free(ptr2);show_alloc_mem_plus();
+	ft_printf("{bold}{green}Last free done. Res:\n{reset}");
+	show_alloc_mem_plus();
+
+	ft_printf("\n{bold}{cyan}Part 3: reusing freed last node with increased size{reset}\n\n");
+	ptr = malloc(1000);
+	ptr1 = malloc(1000);
+	free(ptr1);
+	show_alloc_mem_plus();
+	ptr1 = malloc(1024);
+	show_alloc_mem_plus();
+	free(ptr);show_alloc_mem_plus();
+	free(ptr1);show_alloc_mem_plus();
+	ft_printf("{bold}{green}Last free done. Res:\n{reset}");
+	show_alloc_mem_plus();
+
+	#define MAX_ALLOC 5000
+	#define INCR 3
+
+	// TEST1 //
+	ft_printf("\n{bold}{cyan}TEST1...{reset}\n");
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		void	*data;
+		if (!(data = malloc(i)))
+			return (-1);
+		memset(data, 'a', i);
+		free(data);
+		//ft_printf("i = %d\n", i);
+	}
+	ft_printf("{bold}{green}TEST1 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST2 //
+	ft_printf("{bold}{cyan}TEST2...{reset}\n");
+	void *data2[MAX_ALLOC];
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data2[i] = malloc(i)))
+			return (-1);
+		memset(data2[i], 'a', i);
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char	cmp[i];
+		char	zzzz[i+1];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data2[i], i) != 0) {
+			memcpy(zzzz, data2[i], i);
+			zzzz[i] = 0;
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted ( '%s' )", i, zzzz);
+			return -1;
+		}
+		free(data2[i]);
+	}
+	ft_printf("{bold}{green}TEST2 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST3 //
+	ft_printf("{bold}{cyan}TEST3...{reset}\n");
+	void *data3[MAX_ALLOC];
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data3[i] = malloc(i)))
+			return (-1);
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		memset(data3[i], 'a', i);
+		free(data3[i]);
+	}
+	ft_printf("{bold}{green}TEST3 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST4 //
+	ft_printf("{bold}{cyan}TEST4...{reset}\n");
+	void *data4[MAX_ALLOC];
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data4[i] = malloc(i)))
+			return -1;
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		memset(data4[i], 'a', i);
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data4[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+		free(data4[i]);
+	}
+	ft_printf("{bold}{green}TEST4 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST5 //
+	ft_printf("{bold}{cyan}TEST5...{reset}\n");
+	void *data5[MAX_ALLOC];
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data5[i] = malloc(i)))
+			return -1;
+		memset(data5[i], 'a', i);
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data5[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data5[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+		free(data5[i]);
+	}
+	ft_printf("{bold}{green}TEST5 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST6 //
+	/*ft_printf("{bold}{cyan}TEST6...{reset}\n");
+	void *data6[MAX_ALLOC];
+	for (size_t len = 1; len < MAX_ALLOC; len += INCR)
+	{
+		char cmp[len];
+
+		memset(cmp, 'a', len);
+		for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+		{
+			if (!(data6[i] = malloc(len)))
+				return -1;
+			memset(data6[i], 'a', len);
+		}
+		for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+		{
+			if (memcmp(cmp, data6[i], len) != 0)
+			{
+				ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted ( %d )", i, __LINE__);
+				return -1;
+			}
+		}
+		for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+		{
+			if (memcmp(cmp, data6[i], len) != 0)
+			{
+				ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted ( %d )", i, __LINE__);
+				return -1;
+			}
+			free(data6[i]);
+		}
+	}
+	ft_printf("{bold}{green}TEST6 OK{reset}\n");
+	show_alloc_mem_plus();*/
+
+	// TEST7 //
+	ft_printf("{bold}{cyan}TEST7...{reset}\n");
+	void *data7[MAX_ALLOC];
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data7[i] = realloc(NULL, i)))
+			return -1;
+		memset(data7[i], 'a', i);
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data7[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data7[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+		free(data7[i]);
+	}
+	ft_printf("{bold}{green}TEST7 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST8 //
+	ft_printf("{bold}{cyan}TEST8...{reset}\n");
+	void *data8[MAX_ALLOC];
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data8[i] = malloc(i)))
+			return -1;
+		if (!(data8[i] = realloc(data8[i], i)))
+			return -1;
+		memset(data8[i], 'a', i);
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data8[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data8[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+		free(data8[i]);
+	}
+	ft_printf("{bold}{green}TEST8 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST9 //
+	ft_printf("{bold}{cyan}TEST9...{reset}\n");
+	void *data9[MAX_ALLOC];
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data9[i] = malloc(i)))
+			return -1;
+		memset(data9[i], 'a', i);
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data9[i] = realloc(data9[i], i)))
+			return -1;
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data9[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data9[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data9[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+		free(data9[i]);
+	}
+	ft_printf("{bold}{green}TEST9 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST10 //
+	ft_printf("{bold}{cyan}TEST10...{reset}\n");
+	void *data10[MAX_ALLOC];
+	for (size_t i = 2; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data10[i] = malloc(i)))
+			return -1;
+		memset(data10[i], 'a', i);
+	}
+	for (size_t i = 2; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data10[i] = realloc(data10[i], i / 2)))
+			return -1;
+		char		cmp[i / 2];
+
+		memset(cmp, 'a', i / 2);
+		if (memcmp(cmp, data10[i], i / 2) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (size_t i = 2; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i / 2];
+
+		memset(cmp, 'a', i / 2);
+		if (memcmp(cmp, data10[i], i / 2) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (size_t i = 2; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i / 2];
+
+		memset(cmp, 'a', i / 2);
+		if (memcmp(cmp, data10[i], i / 2) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+		free(data10[i]);
+	}
+	ft_printf("{bold}{green}TEST10 OK{reset}\n");
+	show_alloc_mem_plus();
+
+	// TEST11 //
+	ft_printf("{bold}{cyan}TEST11...{reset}\n");
+	void *data11[MAX_ALLOC];
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data11[i] = malloc(i)))
+			return -1;
+		memset(data11[i], 'a', i);
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data11[i] = realloc(data11[i], i * 2)))
+			return -1;
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data11[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	//show_alloc_mem_plus();
+	//ft_printf("\n\n");
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data11[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data11[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			return -1;
+		}
+		free(data11[i]);
+	}
+	ft_printf("{bold}{green}TEST11 OK{reset}\n");
+	show_alloc_mem_plus();
+
+
+	// TEST12 //
+	ft_printf("{bold}{cyan}TEST12...{reset}\n");
+	void *data12[MAX_ALLOC];
+	ssize_t i;
+	for (i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data12[i] = malloc(i)))
+			return -1;
+		memset(data12[i], 'a', i);
+	}
+	for (i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		if (!(data12[i] = realloc(data12[i], i * 2)))
+			return -1;
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data12[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "cmp 1 Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (i = 1; i < MAX_ALLOC; i += INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data12[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "cmp 2 Segment %zu is corrupted", i);
+			return -1;
+		}
+	}
+	for (i = i - INCR; i > 0; i -= INCR)
+	{
+		char		cmp[i];
+
+		memset(cmp, 'a', i);
+		if (memcmp(cmp, data12[i], i) != 0) {
+			ft_dprintf(STDERR_FILENO, "cmp 3 Segment %zu is corrupted", i);
+			return -1;
+		}
+		free(data12[i]);
+	}
+	ft_printf("{bold}{green}TEST12 OK{reset}\n");
+	show_alloc_mem_plus();
 	return (0);
 }

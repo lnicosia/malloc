@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:34:08 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/08 16:28:06 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/08/16 11:11:48 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,12 @@ void	*new_page(size_t size, size_t type, size_t alignment)
 	new->mem = new->mem->start - BLOCK_METADATA;
 	new->mem->size = size;
 	new->mem->used = 1;
+	new->next = NULL;
 	if (!page)
 		*page_addr = new;
 	else
 		page->next = new;
-	ft_printf("New page:\n");
+	//ft_printf("New page, returning [%p]\n", new->mem->start);
 	//show_alloc_mem();
 	pthread_mutex_unlock(&g_mutex);
 	return (new->mem->start);
@@ -76,6 +77,7 @@ void	*memalign(size_t alignment, size_t size)
 {
 	t_page		*page;
 	t_malloc	*mem;
+	t_malloc	*new;
 	t_malloc	*prev;
 	void		*aligned_ptr;
 	size_t		type;
@@ -83,7 +85,9 @@ void	*memalign(size_t alignment, size_t size)
 	if (!is_power_of_two(alignment))
 		return (NULL);
 	pthread_mutex_lock(&g_mutex);
-	ft_printf("\nMalloc of %d\n", size);
+	//ft_printf("\nMalloc of %d\n", size);
+	//if (size == 46)
+	//	show_alloc_mem();
 	if (size <= TINY_BLOCK)
 	{
 		page = g_memory.tiny;
@@ -116,40 +120,69 @@ void	*memalign(size_t alignment, size_t size)
 				if (mem->used == 0 && mem->size >= size)
 				{
 					// We found a free block with enough space
+					// Alignment may have changed
 					aligned_ptr = mem->start;
 					if ((size_t)aligned_ptr % alignment != 0)
 						aligned_ptr += alignment - (size_t)aligned_ptr % alignment;
 					if ((size_t)aligned_ptr % alignment != 0)
 						ft_printf("T'as foiré ton calcul connard\n");
-					// We can still use the block only if there is no
-					// node after it and still enough place in the page
-					// OR if there is a node after it and still enough space
-					// before it
-					if ((!mem->next && (size_t)aligned_ptr + size <= type)
-						|| ((size_t)mem->next - (size_t)aligned_ptr >= size))
+					// Alignement didnt change, easy
+					if (aligned_ptr == mem->start)
 					{
-						mem->start = aligned_ptr;
-						// Don't forget to update prev
+						mem->used = 1;
+						page->used_space += mem->size + BLOCK_METADATA;
+						if (mem->size - size > BLOCK_METADATA
+							&& mem->size - size % alignment == 0)
+							new_block(mem, alignment, size);
+						pthread_mutex_unlock(&g_mutex);
+						return (mem->start);
+					}
+					// Check if if still have enough place after realigning
+					if ((!mem->next && (size_t)aligned_ptr + size <= type)
+						|| (mem->next && ((ssize_t)mem->next - (ssize_t)aligned_ptr >= (ssize_t)size)))
+					{
+						new = aligned_ptr - BLOCK_METADATA;
+						new->start = aligned_ptr;
+						new->used = 1;
+						new->next = mem->next;
+						// Update the size with the newly aligned ptr
+						if (mem->next)
+							new->size = (size_t)mem->next - (size_t)aligned_ptr;
+						else
+							new->size = size;
+						// If we're not gonna use all the space
+						// and we can create a new block after this one, do it
+						void	*new_block_ptr = new->start + new->size;
+						if ((size_t)new_block_ptr % 16 != 0)
+							new_block_ptr += 16 - (size_t)new_block_ptr % 16;
+						if ((size_t)new_block_ptr % 16 != 0)
+							ft_printf("T'as foiré ton calcul connard\n");
+						if (new->start + new->size - new_block_ptr > BLOCK_METADATA)
+							new_block(new, 16, new->start + new->size - new_block_ptr);
+						// Update prev
 						if (prev)
 						{
-							prev->next = mem->start - BLOCK_METADATA;
+							if ((size_t)new - (size_t)prev->next > BLOCK_METADATA)
+							{
+								
+							}
+							// Update the used space
+							// if we increase previous node's size
+							if (prev->next != new)
+								page->used_space += (size_t)new - (size_t)prev->next;
+							prev->next = new;
 							prev->size = (size_t)prev->next - (size_t)prev->start;
 						}
 						else
-							page->mem = mem->start - BLOCK_METADATA;
-						// If we're not gonna use all the space
-						// and we can create a new block after this one, do it
-						// (without breaking the alignment of course)
-						if (mem->size - size > BLOCK_METADATA
-							&& mem->size - size % 16 == 0)
-							new_block(mem, size);
-						mem->used = 1;
-						page->used_space += mem->size + BLOCK_METADATA;
-						ft_printf("Free space used:\n");
+						{
+							page->mem = new;
+						}
+						page->used_space += new->size + BLOCK_METADATA;
+						//ft_printf("Free space used:\n");
 						//show_alloc_mem();
-						ft_printf("Returning %p\n", mem->start);
+						//ft_printf("Returning %p\n", new->start);
 						pthread_mutex_unlock(&g_mutex);
-						return (mem->start);
+						return (new->start);
 					}
 				}
 				// Save prev node to connect the new one with it
@@ -174,8 +207,8 @@ void	*memalign(size_t alignment, size_t size)
 				page->used_space += size + BLOCK_METADATA;
 				//ft_printf("New block\n");
 				//show_alloc_mem();
-				ft_printf("New block ok, returning");
-				ft_printf(" (%p)\n", prev->next->start);
+				//ft_printf("New block ok, returning");
+				//ft_printf(" (%p)\n", prev->next->start);
 				pthread_mutex_unlock(&g_mutex);
 				return (prev->next->start);
 			}

@@ -1,6 +1,8 @@
 {
 	"files.associations": {
 		"malloc.h": "c",
-		"limits.h": "c"
+		"limits.h": "c",
+		"ft_stdio.h": "c",
+		"test.h": "c"
 	}
 }

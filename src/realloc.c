@@ -6,9 +6,11 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 11:52:52 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/08 16:27:37 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/07/13 17:12:44 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <limits.h>
 
 #include "malloc.h"
 #include "libft.h"
@@ -18,7 +20,9 @@ int		is_type_changing(size_t old, size_t new)
 {
 	if (old <= TINY_BLOCK && new > TINY_BLOCK)
 		return (1);
-	if (old <= SMALL_BLOCK && new > SMALL_BLOCK)
+	if (old <= SMALL_BLOCK && (new > SMALL_BLOCK || new <= TINY_BLOCK))
+		return (1);
+	if (old > SMALL_BLOCK && new <= SMALL_BLOCK)
 		return (1);
 	return (0);
 }
@@ -46,7 +50,7 @@ void	*find_in_page(void *ptr, size_t size, size_t type, t_page *page)
 				{
 					//ft_printf("Found %p\n", ptr);
 					// Case where we reduce the size
-					if (size <= mem->size && mem->size <= SMALL_BLOCK)
+					if (size <= mem->size && type != LARGE)
 					{
 						// Defragmentation:
 						// if we can fit a new block, do it
@@ -54,7 +58,7 @@ void	*find_in_page(void *ptr, size_t size, size_t type, t_page *page)
 						if (mem->size - size > BLOCK_METADATA
 							&& mem->size - size % 16 == 0)
 						{
-							new_block(mem, size);
+							new_block(mem, 16, size);
 							page->used_space += BLOCK_METADATA;
 						}
 						//ft_printf("Returning %p\n", mem->start);
@@ -66,7 +70,7 @@ void	*find_in_page(void *ptr, size_t size, size_t type, t_page *page)
 						&& page->used_space + diff <= type && !mem->next)
 					{
 						page->used_space += diff;
-						mem->size = size;
+						mem->size += diff;
 						//show_alloc_mem();
 						pthread_mutex_unlock(&g_mutex);
 						return (mem->start);
@@ -117,7 +121,7 @@ void	*realloc(void *ptr, size_t size)
 {
 	void	*res;
 
-	ft_printf("Reallocating %p to %d\n", ptr, size);
+	//ft_printf("Reallocating %p to %d\n", ptr, size);
 	if ((size_t)ptr % (size_t)16 != 0)
 			custom_error("{red} NOT ALIGNED!!{reset}\n");
 	//show_alloc_mem();
@@ -133,13 +137,21 @@ void	*realloc(void *ptr, size_t size)
 		custom_error("Warning - %p is uninitialized\n", ptr);
 		return (malloc(size));
 	}
-	ft_printf("Returning %p from realloc\n", res);
+	//ft_printf("Returning %p from realloc\n", res);
 	//show_alloc_mem();
 	return (res);
 }
 
 void	*reallocf(void *ptr, size_t size)
 {
-	//ft_printf("CC reallocf()\n");
+	ft_printf("CC reallocf(%p, %d)\n", ptr, size);
 	return (realloc(ptr, size));
+}
+
+void	*reallocarray(void *ptr, size_t nmemb, size_t size)
+{
+	ft_printf("CC reallocarray(%p, %d, %d)\n", ptr, nmemb, size);
+	if (nmemb * size > INT_MAX)
+		return (NULL);
+	return (realloc(ptr, nmemb * size));
 }
