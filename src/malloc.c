@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:34:08 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/08/16 11:11:48 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/10/25 17:37:29 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,8 +157,8 @@ void	*memalign(size_t alignment, size_t size)
 							new_block_ptr += 16 - (size_t)new_block_ptr % 16;
 						if ((size_t)new_block_ptr % 16 != 0)
 							ft_printf("T'as foiré ton calcul connard\n");
-						if (new->start + new->size - new_block_ptr > BLOCK_METADATA)
-							new_block(new, 16, new->start + new->size - new_block_ptr);
+						if (new->start + new->size - new_block_ptr > (long int)BLOCK_METADATA)
+							new_block(new, 16, (size_t)new->start + new->size - (size_t)new_block_ptr);
 						// Update prev
 						if (prev)
 						{

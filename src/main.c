@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:29:55 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/07/13 15:49:18 by lnicosia         ###   ########.fr       */
+/*   Updated: 2021/10/25 12:00:45 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,7 +306,7 @@ int		main(int ac, char **av)
 		void	*data;
 		if (!(data = malloc(i)))
 			return (-1);
-		memset(data, 'a', i);
+		ft_memset(data, 'a', i);
 		free(data);
 		//ft_printf("i = %d\n", i);
 	}
@@ -320,14 +320,14 @@ int		main(int ac, char **av)
 	{
 		if (!(data2[i] = malloc(i)))
 			return (-1);
-		memset(data2[i], 'a', i);
+		ft_memset(data2[i], 'a', i);
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
 		char	cmp[i];
 		char	zzzz[i+1];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data2[i], i) != 0) {
 			memcpy(zzzz, data2[i], i);
 			zzzz[i] = 0;
@@ -349,7 +349,7 @@ int		main(int ac, char **av)
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
-		memset(data3[i], 'a', i);
+		ft_memset(data3[i], 'a', i);
 		free(data3[i]);
 	}
 	ft_printf("{bold}{green}TEST3 OK{reset}\n");
@@ -365,13 +365,13 @@ int		main(int ac, char **av)
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
-		memset(data4[i], 'a', i);
+		ft_memset(data4[i], 'a', i);
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data4[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -388,13 +388,13 @@ int		main(int ac, char **av)
 	{
 		if (!(data5[i] = malloc(i)))
 			return -1;
-		memset(data5[i], 'a', i);
+		ft_memset(data5[i], 'a', i);
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data5[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -404,7 +404,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data5[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -421,12 +421,12 @@ int		main(int ac, char **av)
 	{
 		char cmp[len];
 
-		memset(cmp, 'a', len);
+		ft_memset(cmp, 'a', len);
 		for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 		{
 			if (!(data6[i] = malloc(len)))
 				return -1;
-			memset(data6[i], 'a', len);
+			ft_memset(data6[i], 'a', len);
 		}
 		for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 		{
@@ -456,13 +456,13 @@ int		main(int ac, char **av)
 	{
 		if (!(data7[i] = realloc(NULL, i)))
 			return -1;
-		memset(data7[i], 'a', i);
+		ft_memset(data7[i], 'a', i);
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data7[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -472,7 +472,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data7[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -491,13 +491,13 @@ int		main(int ac, char **av)
 			return -1;
 		if (!(data8[i] = realloc(data8[i], i)))
 			return -1;
-		memset(data8[i], 'a', i);
+		ft_memset(data8[i], 'a', i);
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data8[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -507,7 +507,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data8[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -524,7 +524,7 @@ int		main(int ac, char **av)
 	{
 		if (!(data9[i] = malloc(i)))
 			return -1;
-		memset(data9[i], 'a', i);
+		ft_memset(data9[i], 'a', i);
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
@@ -532,7 +532,7 @@ int		main(int ac, char **av)
 			return -1;
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data9[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -542,7 +542,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data9[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -552,7 +552,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data9[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -569,7 +569,7 @@ int		main(int ac, char **av)
 	{
 		if (!(data10[i] = malloc(i)))
 			return -1;
-		memset(data10[i], 'a', i);
+		ft_memset(data10[i], 'a', i);
 	}
 	for (size_t i = 2; i < MAX_ALLOC; i += INCR)
 	{
@@ -577,7 +577,7 @@ int		main(int ac, char **av)
 			return -1;
 		char		cmp[i / 2];
 
-		memset(cmp, 'a', i / 2);
+		ft_memset(cmp, 'a', i / 2);
 		if (memcmp(cmp, data10[i], i / 2) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -587,7 +587,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i / 2];
 
-		memset(cmp, 'a', i / 2);
+		ft_memset(cmp, 'a', i / 2);
 		if (memcmp(cmp, data10[i], i / 2) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -597,7 +597,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i / 2];
 
-		memset(cmp, 'a', i / 2);
+		ft_memset(cmp, 'a', i / 2);
 		if (memcmp(cmp, data10[i], i / 2) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -614,7 +614,7 @@ int		main(int ac, char **av)
 	{
 		if (!(data11[i] = malloc(i)))
 			return -1;
-		memset(data11[i], 'a', i);
+		ft_memset(data11[i], 'a', i);
 	}
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
@@ -622,7 +622,7 @@ int		main(int ac, char **av)
 			return -1;
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data11[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -634,7 +634,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data11[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -644,7 +644,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data11[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
 			return -1;
@@ -663,7 +663,7 @@ int		main(int ac, char **av)
 	{
 		if (!(data12[i] = malloc(i)))
 			return -1;
-		memset(data12[i], 'a', i);
+		ft_memset(data12[i], 'a', i);
 	}
 	for (i = 1; i < MAX_ALLOC; i += INCR)
 	{
@@ -671,7 +671,7 @@ int		main(int ac, char **av)
 			return -1;
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data12[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "cmp 1 Segment %zu is corrupted", i);
 			return -1;
@@ -681,7 +681,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data12[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "cmp 2 Segment %zu is corrupted", i);
 			return -1;
@@ -691,7 +691,7 @@ int		main(int ac, char **av)
 	{
 		char		cmp[i];
 
-		memset(cmp, 'a', i);
+		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data12[i], i) != 0) {
 			ft_dprintf(STDERR_FILENO, "cmp 3 Segment %zu is corrupted", i);
 			return -1;

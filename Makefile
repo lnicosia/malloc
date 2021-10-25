@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/07/08 17:14:57 by lnicosia         ###   ########.fr        #
+#    Updated: 2021/10/25 17:40:08 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-NAME = libft_malloc_$(HOSTTYPE).so
+NAME = libft_malloc.so
+FULLNAME = libft_malloc_$(HOSTTYPE).so
 
 MAKEFILE = Makefile
 
@@ -119,12 +120,16 @@ I = 1
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	@printf $(YELLOW)"[$(I)/$(SRC_SIZE)] Compiling $<\n"$(RESET)
 	$(eval I=$(shell echo $$(($(I) + 1))))
-	@gcc -c $< -o $@ $(CFLAGS) 
+	gcc -c $< -o $@ $(CFLAGS) 
 
-$(NAME): $(LIBFT) $(OBJ_DIR) $(OBJ) 
-	@printf $(CYAN)"[INFO] Linking ${BIN_DIR}/${NAME}\n"$(RESET)
-	@gcc -shared $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
-	@printf ${GREEN}"[INFO] Compiled $(BIN_DIR)/$(NAME) with success!\n"
+$(FULLNAME): $(LIBFT) $(OBJ_DIR) $(OBJ)
+	@printf $(CYAN)"[INFO] Linking ${BIN_DIR}/${FULLNAME}\n"$(RESET)
+	@gcc -shared $(CFLAGS) -o $(FULLNAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
+	@printf ${GREEN}"[INFO] Compiled $(BIN_DIR)/$(FULLNAME) with success!\n"
+
+$(NAME): $(FULLNAME)
+	@rm -f $(NAME)
+	@ln -sv $(FULLNAME) $(NAME)
 	@printf ${RESET}
 
 clean:
