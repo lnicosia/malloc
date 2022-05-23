@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/05/23 14:45:46 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/23 17:20:52 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ FULLNAME = libft_malloc_$(HOSTTYPE).so
 
 MAKEFILE = Makefile
 
-LIB_DIR = lib
+LIB_DIR = .
 SRC_DIR = src
 SRC_SIZE = $(shell ls src | wc -l)
 OBJ_DIR = obj
