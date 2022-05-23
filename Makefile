@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2021/10/25 17:40:08 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/05/23 14:45:46 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -124,13 +124,13 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 
 $(FULLNAME): $(LIBFT) $(OBJ_DIR) $(OBJ)
 	@printf $(CYAN)"[INFO] Linking ${BIN_DIR}/${FULLNAME}\n"$(RESET)
-	@gcc -shared $(CFLAGS) -o $(FULLNAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
+	gcc -shared $(CFLAGS) -o $(FULLNAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 	@printf ${GREEN}"[INFO] Compiled $(BIN_DIR)/$(FULLNAME) with success!\n"
 
 $(NAME): $(FULLNAME)
 	@rm -f $(NAME)
-	@ln -sv $(FULLNAME) $(NAME)
 	@printf ${RESET}
+	ln -sv $(FULLNAME) $(NAME)
 
 clean:
 	@make --no-print-directory clean -C $(LIBFT_DIR)
