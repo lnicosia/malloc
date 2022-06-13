@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 12:53:00 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/10/25 17:40:14 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/06/13 10:27:50 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,15 +149,4 @@ void	free(void *ptr)
 		return ;
 	}
 	pthread_mutex_unlock(&g_mutex);
-}
-
-void	*fatal_error(void)
-{
-	custom_error("{red}Fatal error{reset}\n");
-	while (g_memory.tiny)
-	{
-		
-	}
-	exit(0);
-	return (0);
 }
