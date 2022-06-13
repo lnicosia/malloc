@@ -122,8 +122,8 @@ void	*realloc(void *ptr, size_t size)
 	void	*res;
 
 	//ft_printf("Reallocating %p to %d\n", ptr, size);
-	if ((size_t)ptr % (size_t)16 != 0)
-			custom_error("{red} NOT ALIGNED!!{reset}\n");
+	//if ((size_t)ptr % (size_t)16 != 0)
+			//custom_error("{red} NOT ALIGNED!!{reset}\n");
 	//show_alloc_mem();
 	if (!ptr)
 		return (malloc(size));
@@ -134,8 +134,9 @@ void	*realloc(void *ptr, size_t size)
 	}
 	if ((res = find_ptr(ptr, size)) == 0)
 	{
-		custom_error("Warning - %p is uninitialized\n", ptr);
-		return (malloc(size));
+		//custom_error("Warning - %p is uninitialized\n", ptr);
+		return (NULL);
+		//return (malloc(size));
 	}
 	//ft_printf("Returning %p from realloc\n", res);
 	//show_alloc_mem();
@@ -144,13 +145,13 @@ void	*realloc(void *ptr, size_t size)
 
 void	*reallocf(void *ptr, size_t size)
 {
-	ft_printf("CC reallocf(%p, %d)\n", ptr, size);
+	//ft_printf("CC reallocf(%p, %d)\n", ptr, size);
 	return (realloc(ptr, size));
 }
 
 void	*reallocarray(void *ptr, size_t nmemb, size_t size)
 {
-	ft_printf("CC reallocarray(%p, %d, %d)\n", ptr, nmemb, size);
+	//ft_printf("CC reallocarray(%p, %d, %d)\n", ptr, nmemb, size);
 	if (nmemb * size > INT_MAX)
 		return (NULL);
 	return (realloc(ptr, nmemb * size));

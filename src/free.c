@@ -46,7 +46,6 @@ int		check_page(void *ptr, t_page *page, size_t type)
 	t_page		*prev;
 
 	prev = NULL;
-	(void)prev_mem;
 	while (page)
 	{
 		// Check if the ptr is in the next page so we can remove the node
@@ -58,7 +57,7 @@ int		check_page(void *ptr, t_page *page, size_t type)
 			mem = page->mem;
 			while (mem)
 			{
-				if (mem->start == ptr)
+				if (mem->start == ptr && page->used_space - mem->size - BLOCK_METADATA > PAGE_METADATA)
 				{
 					if (mem->used == 0)
 					{
@@ -107,7 +106,7 @@ int		check_page(void *ptr, t_page *page, size_t type)
 				else
 					prev->next = page->next;
 				// Unmapping the actual memory
-				munmap(page, type);
+				//munmap(page, type);
 			}
 			return (1);
 		}
@@ -122,8 +121,8 @@ void	free(void *ptr)
 	//ft_printf("Freeing %p\n", ptr);
 	//if (!ptr)
 	//	show_alloc_mem_plus();
-	if ((size_t)ptr % (size_t)16 != 0)
-			custom_error("{red}FREE NOT ALIGNED!!{reset}\n");
+	//if ((size_t)ptr % (size_t)16 != 0)
+			//custom_error("{red}FREE NOT ALIGNED!!{reset}\n");
 	if (!ptr)
 		return ;
 	pthread_mutex_lock(&g_mutex);

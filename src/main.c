@@ -6,14 +6,21 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:29:55 by lnicosia          #+#    #+#             */
-/*   Updated: 2021/10/25 12:00:45 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/06/13 10:58:57 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <stdio.h>
 
 #include "malloc.h"
 #include "libft.h"
+
+#define MAX_ALLOC 5000
+#define INCR 3
+
 
 int		main(int ac, char **av)
 {
@@ -31,22 +38,30 @@ int		main(int ac, char **av)
 	ft_printf("Size of LARGE page: %d\n", LARGE);
 	ft_printf("Max size of LARGE blocks: %d\n\n", LARGE_BLOCK);
 
+	/*struct rlimit limits;
+
+	if (getrlimit(RLIMIT_AS, &limits) == -1)
+		ft_perror("getrlimit: ");
+	printf("Soft limit = %ld\n", limits.rlim_cur);
+	printf("Hard limit = %ld\n", limits.rlim_max);*/
+
+	show_alloc_mem_plus();
 	//-- FILL PAGE TEST --//
-	/*char	*text[250];
+	/*char	*text000[250];
 	for (int i = 0; i < 250; i++)
 	{
-		ft_printf("i = %d\n", i);
-		text[i] = (char*)malloc(40);
+		text000[i] = (char*)malloc(40);
 	}
-	text[227][4] = 4;
+	text000[227][4] = 4;
+	ft_printf("After mallocs:\n");
 	show_alloc_mem_plus();
 	for (int i = 0; i < 250; i++)
 	{
-		ft_printf("i = %d\n", i);
-		free(text[i]);
+		free(text000[i]);
 	}
+	ft_printf("After frees:\n");
 	show_alloc_mem_plus();*/
-	
+
 	//-- BASIC TEST --//
 	/*if (ac < 2)
 		return 0;
@@ -105,7 +120,9 @@ int		main(int ac, char **av)
 	free(text2);*/
 
 	//-- VIM CRASH REPRODUCTION TEST --//
-	/*char	*text[1000];
+
+	/*ft_printf("VIM crash test\n");
+	char	*text[1000];
 	text[0] = (char*)malloc(8192);
 	text[1] = (char*)malloc(4096);
 	text[2] = (char*)malloc(336);
@@ -172,14 +189,19 @@ int		main(int ac, char **av)
 	text[45][0] = 'a';
 	text[45][606] = 'a';*/
 
+	/*if (malloc(9223372036854775807) == NULL)
+		ft_printf("Too big malloc\n");*/
 	//-- REALLOC TEST --//
-	/*char	*text = (char*)malloc(10);
+	char	*text0 = (char*)malloc(10);
+	show_alloc_mem_plus();
+	ft_printf("{yellow}Start of reallocs{reset}\n");
 	for (int i = 11; i < 100; i++)
 	{
-		text = (char*)realloc(text, i);
+		text0 = (char*)realloc(text0, i);
+		ft_printf("Current realloc size = %d\n", i);
 		show_alloc_mem_plus();
-	}*/
-
+	}
+	free(text0);
 
 	//-- REALLOC DEFRAGMENTING TEST --//
 	/*char	*text = (char*)malloc(10);
@@ -256,7 +278,7 @@ int		main(int ac, char **av)
 
 	// DEFRAG TEST //
 
-	ft_printf("\n{bold}{cyan}Part 1: Reusing freed node with a different alignement{reset}\n\n");
+	/*ft_printf("\n{bold}{cyan}Part 1: Reusing freed node with a different alignement{reset}\n\n");
 	void	*ptr = malloc(1000);
 	void	*ptr1 = malloc(1000);
 	void	*ptr2 = malloc(1000);
@@ -295,9 +317,6 @@ int		main(int ac, char **av)
 	free(ptr1);show_alloc_mem_plus();
 	ft_printf("{bold}{green}Last free done. Res:\n{reset}");
 	show_alloc_mem_plus();
-
-	#define MAX_ALLOC 5000
-	#define INCR 3
 
 	// TEST1 //
 	ft_printf("\n{bold}{cyan}TEST1...{reset}\n");
@@ -412,7 +431,7 @@ int		main(int ac, char **av)
 		free(data5[i]);
 	}
 	ft_printf("{bold}{green}TEST5 OK{reset}\n");
-	show_alloc_mem_plus();
+	show_alloc_mem_plus();*/
 
 	// TEST6 //
 	/*ft_printf("{bold}{cyan}TEST6...{reset}\n");
@@ -450,7 +469,7 @@ int		main(int ac, char **av)
 	show_alloc_mem_plus();*/
 
 	// TEST7 //
-	ft_printf("{bold}{cyan}TEST7...{reset}\n");
+	/*ft_printf("{bold}{cyan}TEST7...{reset}\n");
 	void *data7[MAX_ALLOC];
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
@@ -652,11 +671,11 @@ int		main(int ac, char **av)
 		free(data11[i]);
 	}
 	ft_printf("{bold}{green}TEST11 OK{reset}\n");
-	show_alloc_mem_plus();
+	show_alloc_mem_plus();*/
 
 
 	// TEST12 //
-	ft_printf("{bold}{cyan}TEST12...{reset}\n");
+	/*ft_printf("{bold}{cyan}TEST12...{reset}\n");
 	void *data12[MAX_ALLOC];
 	ssize_t i;
 	for (i = 1; i < MAX_ALLOC; i += INCR)
@@ -699,6 +718,6 @@ int		main(int ac, char **av)
 		free(data12[i]);
 	}
 	ft_printf("{bold}{green}TEST12 OK{reset}\n");
-	show_alloc_mem_plus();
+	show_alloc_mem_plus();*/
 	return (0);
 }

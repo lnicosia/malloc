@@ -6,7 +6,7 @@
 /*   By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/21 11:34:08 by lnicosia          #+#    #+#             */
-/*   Updated: 2022/06/01 17:51:55 by lnicosia         ###   ########.fr       */
+/*   Updated: 2022/06/13 11:18:48 by lnicosia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	*new_page(size_t size, size_t type, size_t alignment)
 	if ((new = mmap(0, map_size, PROT_READ | PROT_WRITE,
 		MAP_ANONYMOUS | MAP_SHARED, -1, 0)) == MAP_FAILED)
 	{
-		ft_perror("Map error:");
 		pthread_mutex_unlock(&g_mutex);
 		return (0);
 	}
@@ -56,8 +55,6 @@ void	*new_page(size_t size, size_t type, size_t alignment)
 	new->mem->start = new->start + PAGE_METADATA + BLOCK_METADATA;
 	if ((size_t)new->mem->start % alignment != 0)
 		new->mem->start += alignment - (size_t)new->mem->start % alignment;
-	if ((size_t)new->mem->start % alignment != 0)
-		ft_printf("T'as foiré ton calcul\n");
 	new->mem = new->mem->start - BLOCK_METADATA;
 	new->mem->size = size;
 	new->mem->used = 1;
@@ -126,8 +123,6 @@ void	*memalign(size_t alignment, size_t size)
 						aligned_ptr = mem->start;
 						if ((size_t)aligned_ptr % alignment != 0)
 							aligned_ptr += alignment - (size_t)aligned_ptr % alignment;
-						if ((size_t)aligned_ptr % alignment != 0)
-							ft_printf("T'as foiré ton calcu\n");
 						// Alignement didnt change, easy
 						if (aligned_ptr == mem->start)
 						{
@@ -157,8 +152,6 @@ void	*memalign(size_t alignment, size_t size)
 							void	*new_block_ptr = new->start + new->size;
 							if ((size_t)new_block_ptr % 16 != 0)
 								new_block_ptr += 16 - (size_t)new_block_ptr % 16;
-							if ((size_t)new_block_ptr % 16 != 0)
-								ft_printf("T'as foiré ton calcu\n");
 							if (new->start + new->size - new_block_ptr > (long int)BLOCK_METADATA)
 								new_block(new, 16, (size_t)new->start + new->size - (size_t)new_block_ptr);
 							// Update prev
@@ -194,8 +187,6 @@ void	*memalign(size_t alignment, size_t size)
 				aligned_ptr = prev->start + prev->size + BLOCK_METADATA;
 				if ((size_t)aligned_ptr % alignment != 0)
 					aligned_ptr += alignment - (size_t)aligned_ptr % alignment;
-				if ((size_t)aligned_ptr % alignment != 0)
-					ft_printf("T'as foiré ton calcu\n");
 				// Check if we have enough space left at the end of the page
 				if (aligned_ptr + size <= page->start + type)
 				{
