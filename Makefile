@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/05/23 17:20:52 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/06/13 10:12:41 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,6 @@ MAKEFILE = Makefile
 
 LIB_DIR = .
 SRC_DIR = src
-SRC_SIZE = $(shell ls src | wc -l)
 OBJ_DIR = obj
 BIN_DIR = .
 INCLUDES_DIR = includes
@@ -45,6 +44,10 @@ LIB_RAW =
 SRC_RAW =	malloc.c free.c show_alloc_mem.c realloc.c utils.c \
 			others.c
 
+SRC_SIZE = $(shell ls src | wc -l)
+$(eval SRC_SIZE=$(shell echo $$(($(SRC_SIZE) - 1))))
+# -1 because we have main.c to ignore
+
 HEADERS =	malloc.h
 
 #
@@ -61,11 +64,11 @@ RESOURCES =
 OPTI_FLAGS = -O3
 
 CFLAGS =	-Wall -Wextra -Werror -Wpadded -Wconversion -I $(INCLUDES_DIR) \
-	  	-I $(LIBFT_DIR)/includes -I $(BMP_PARSER_DIR)/includes \
-		-I $(LIBMFT_DIR)/includes -I $(GLAD_DIR)/include \
-		-g3 -fPIC\
+	  	-I $(LIBFT_DIR)/includes -I \
+		-g3 -fPIC \
 		#$(OPTI_FLAGS) \
-		
+
+NPROC = $(shell nproc)
 	
 #
 # Setting right flags and files dependencies to link external libs
@@ -102,16 +105,13 @@ RESET :="\e[0m"
 
 all:
 	@printf $(CYAN)"[INFO] Building libft..\n"$(RESET)
-	@make --no-print-directory -C $(LIBFT_DIR)
+	@make --no-print-directory -j$(NPROC) -C $(LIBFT_DIR)
 	@printf $(CYAN)"[INFO] Building $(NAME)..\n"$(RESET)
-	@make --no-print-directory $(BIN_DIR)/$(NAME)
+	@make --no-print-directory -j$(NPROC) $(BIN_DIR)/$(NAME)
 
 
 $(LIBFT):
-	@make --no-print-directory -C $(LIBFT_DIR)
-
-$(LIBMFT):
-	@make --no-print-directory -C $(LIBMFT_DIR)
+	@make --no-print-directory -j$(NPROC) -C $(LIBFT_DIR)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
