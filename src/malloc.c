@@ -127,11 +127,24 @@ void	*memalign(size_t alignment, size_t size)
 						if (aligned_ptr == mem->start)
 						{
 							mem->used = 1;
-							page->used_space += mem->size + BLOCK_METADATA;
-							if (mem->size - size > BLOCK_METADATA
-									&& mem->size - size % alignment == 0)
-								new_block(mem, alignment, size);
+							if (ft_labs((ssize_t)mem->size - (ssize_t)size) > BLOCK_METADATA)
+									//&& mem->size - size % alignment == 0)
+							{
+								if (new_block(mem, alignment, size) == 1)
+								{
+									page->used_space += size + BLOCK_METADATA;
+									mem->size = size;
+								}
+								else
+									page->used_space += size + BLOCK_METADATA;
+							}
+							else
+							{
+								page->used_space += size + BLOCK_METADATA;
+								mem->size = size;
+							}
 							pthread_mutex_unlock(&g_mutex);
+							//ft_printf("Reusing %p\n", mem->start);
 							return (mem->start);
 						}
 						// Check if if still have enough place after realigning

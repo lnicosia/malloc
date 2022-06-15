@@ -6,7 +6,7 @@
 #    By: lnicosia <lnicosia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/22 09:45:49 by lnicosia          #+#    #+#              #
-#    Updated: 2022/06/13 12:52:19 by lnicosia         ###   ########.fr        #
+#    Updated: 2022/06/15 11:24:26 by lnicosia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -132,7 +132,7 @@ $(NAME): $(FULLNAME)
 	@printf ${RESET}
 	@printf $(CYAN)"[INFO] Creating symbolic link ${BIN_DIR}/${NAME}\n"$(RESET)
 	ln -sv $(FULLNAME) $(NAME)
-	@printf ${GREEN}"[INFO] Created $(BIN_DIR)/$(NAME) with success!\n"
+	@printf ${GREEN}"[INFO] Created $(BIN_DIR)/$(NAME) with success!\n"$(RESET)
 
 clean:
 	@make --no-print-directory clean -C $(LIBFT_DIR)

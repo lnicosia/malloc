@@ -18,25 +18,32 @@ size_t	show_page_content_plus(t_page *page)
 	t_malloc	*mem;
 	size_t		total;
 	size_t		full_total;
+	size_t		index;
 
 	total = 0;
+	index = 0;
 	full_total = PAGE_METADATA;
 	mem = page->mem;
 	while (mem)
 	{
 		if (mem->used != 0)
+		{
 			total += mem->size;
-		full_total += mem->size + BLOCK_METADATA;
+			full_total += mem->size + BLOCK_METADATA;
+		}
+		ft_printf("%d: ", index);
 		ft_printf("%p - %p : ", mem->start, mem->start + mem->size);
 		if (mem->used == 0)
-			ft_printf("{green}%ld bytes FREE{reset}", mem->size);
+			ft_printf("{green}0 (free){reset}");
 		else
-			ft_printf("{cyan}%ld / %ld bytes", mem->size, total);
-		ft_printf("{cyan} (%ld total){reset}", full_total);
+			ft_printf("{cyan}%ld", mem->size);
+		ft_printf("{cyan} / %ld bytes", mem->size + BLOCK_METADATA);
+		ft_printf(" (%ld total){reset}", full_total);
 		if ((size_t)mem->start % (size_t)16 != 0)
 			custom_error("{red} NOT ALIGNED!!{reset}");
 		ft_printf("\n");
 		mem = mem->next;
+		index++;
 	}
 	return total;
 }
@@ -55,8 +62,8 @@ void	show_alloc_mem_plus(void)
 		ft_printf("{bold}TINY : %p - %p {cyan}(%dB/%dB){reset}\n", page->start,
 		page->start + TINY, page->used_space, TINY);
 		ft_printf("%p - %p (page metadata) : ", page->start, page->start + PAGE_METADATA);
-		ft_printf("{cyan}%ld bytes / %ld (%ld total){reset}\n",
-			PAGE_METADATA, PAGE_METADATA, PAGE_METADATA);
+		ft_printf("{cyan}%ld / %ld bytes (%ld total){reset}\n",
+			0, PAGE_METADATA, PAGE_METADATA);
 		total += show_page_content_plus(page);
 		page = page->next;
 	}
@@ -66,8 +73,8 @@ void	show_alloc_mem_plus(void)
 		ft_printf("{bold}SMALL : %p - %p {cyan}(%dB/%dB){reset}\n", page->start,
 		page->start + SMALL, page->used_space, SMALL);
 		ft_printf("%p - %p (page metadata): ", page->start, page->start + PAGE_METADATA);
-		ft_printf("{cyan}%ld bytes / %ld (%ld total){reset}\n",
-			PAGE_METADATA, PAGE_METADATA, PAGE_METADATA);
+		ft_printf("{cyan}%ld / %ld bytes (%ld total){reset}\n",
+			0, PAGE_METADATA, PAGE_METADATA);
 		total += show_page_content_plus(page);
 		page = page->next;
 	}
@@ -76,6 +83,9 @@ void	show_alloc_mem_plus(void)
 	{
 		ft_printf("{bold}LARGE : %p {cyan}(%dB/%dB){reset}\n", page->start,
 		page->used_space, page->used_space);
+		ft_printf("%p - %p (page metadata): ", page->start, page->start + PAGE_METADATA);
+		ft_printf("{cyan}%ld / %ld bytes (%ld total){reset}\n",
+			0, PAGE_METADATA, PAGE_METADATA);
 		total += show_page_content_plus(page);
 		page = page->next;
 	}

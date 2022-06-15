@@ -18,9 +18,11 @@
 // If the asked realloc changes the page type
 int		is_type_changing(size_t old, size_t new)
 {
+	//ft_printf("Old size = %d\n", old);
+	//ft_printf("New size = %d\n", new);
 	if (old <= TINY_BLOCK && new > TINY_BLOCK)
 		return (1);
-	if (old <= SMALL_BLOCK && (new > SMALL_BLOCK || new <= TINY_BLOCK))
+	if (old > TINY_BLOCK && old <= SMALL_BLOCK && (new > SMALL_BLOCK || new <= TINY_BLOCK))
 		return (1);
 	if (old > SMALL_BLOCK && new <= SMALL_BLOCK)
 		return (1);
@@ -45,10 +47,15 @@ void	*find_in_page(void *ptr, size_t size, size_t type, t_page *page)
 			mem = page->mem;
 			while (mem)
 			{
-				diff = size - mem->size;
+				diff = ft_labs((ssize_t)size - (ssize_t)mem->size);
 				if (mem->start == ptr)
 				{
-					//ft_printf("Found %p\n", ptr);
+					/*ft_printf("Found %p\n", ptr);
+					ft_printf("Page used space = %d\n", page->used_space);
+					ft_printf("diff = %d\n", diff);
+					ft_printf("type = %d\n", type);
+					ft_printf("mem->next = %p\n", mem->next);
+					ft_printf("is type is_type_changing = %d\n", is_type_changing(mem->size, size));*/
 					// Case where we reduce the size
 					if (size <= mem->size && type != LARGE)
 					{
@@ -61,14 +68,18 @@ void	*find_in_page(void *ptr, size_t size, size_t type, t_page *page)
 							new_block(mem, 16, size);
 							page->used_space += BLOCK_METADATA;
 						}
+						page->used_space -= diff;
+						mem->size = size;
 						//ft_printf("Returning %p\n", mem->start);
 						pthread_mutex_unlock(&g_mutex);
 						return (mem->start);
 					}
 					// Case where we can increase the size of our current block
 					else if (!is_type_changing(mem->size, size)
-						&& page->used_space + diff <= type && !mem->next)
+						&& page->used_space + diff <= type
+						&& (!mem->next || (size_t)mem->next > (size_t)mem->start + mem->size + diff))
 					{
+						//ft_printf("Can increase size\n");
 						page->used_space += diff;
 						mem->size += diff;
 						//show_alloc_mem();
@@ -83,7 +94,7 @@ void	*find_in_page(void *ptr, size_t size, size_t type, t_page *page)
 							return (0);
 						//ft_printf("Malloc from realloc ok\n");
 						ft_memcpy(res, mem->start, mem->size);
-						//ft_printf("Need to free\n");
+						//ft_printf("Need to free %p\n", ptr);
 						free(ptr);
 
 						//ft_printf("Returning %p\n", res);

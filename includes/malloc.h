@@ -56,7 +56,7 @@ typedef struct		s_memory
 
 typedef struct		s_thread
 {
-	
+
 	pthread_once_t	init;
 	char			padding[4];
 }					t_thread;
@@ -79,7 +79,7 @@ void		*pvalloc(size_t size);
 void		show_alloc_mem(void);
 void		show_alloc_mem_plus(void);
 void		show_alloc_mem_ex(void);
-void		new_block(t_malloc *mem, size_t alignment, size_t size);
+int			new_block(t_malloc *mem, size_t alignment, size_t size);
 int			is_power_of_two(size_t nb);
 
 #endif

@@ -45,7 +45,7 @@ int		main(int ac, char **av)
 	printf("Soft limit = %ld\n", limits.rlim_cur);
 	printf("Hard limit = %ld\n", limits.rlim_max);*/
 
-	show_alloc_mem_plus();
+	//show_alloc_mem_plus();
 	//-- FILL PAGE TEST --//
 	/*char	*text000[250];
 	for (int i = 0; i < 250; i++)
@@ -65,14 +65,12 @@ int		main(int ac, char **av)
 	//-- BASIC TEST --//
 	/*if (ac < 2)
 		return 0;
-	char *text = (char*)malloc(10);
-	char *text2 = (char*)malloc(5);
-	char *text3 = (char*)malloc(2);
-	char *text4 = (char*)malloc(40);
-	char *text5 = (char*)malloc(41);
-	char *text6 = (char*)malloc(163483);
-	char *text7 = (char*)malloc(163484);
-	char *text8 = (char*)malloc(16384);
+	char *text = (char*)malloc(10);show_alloc_mem_plus();
+	char *text2 = (char*)malloc(5);show_alloc_mem_plus();
+	char *text3 = (char*)malloc(2);show_alloc_mem_plus();
+	char *text4 = (char*)malloc(40);show_alloc_mem_plus();
+	char *text5 = (char*)malloc(41);show_alloc_mem_plus();
+
 	ft_printf("text addrr = %p\n", text);
 	ft_bzero(text, ft_strlen(av[1] + 1));
 	ft_strcpy(text, av[1]);
@@ -89,35 +87,29 @@ int		main(int ac, char **av)
 	char *text9 = (char*)malloc(5);
 	ft_printf("{bold}{yellow}New malloc{reset}\n");
 	show_alloc_mem_plus();
+	char *text10 = (char*)malloc(68);
+	ft_printf("{bold}{yellow}New malloc{reset}\n");
+	show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text5{reset}\n");
 	free(text5);ft_printf("Free ok\n");show_alloc_mem_plus();
 	ft_printf("{bold}{yellow}Freeing text9{reset}\n");
 	free(text9);ft_printf("Free ok\n");show_alloc_mem_plus();
-	ft_printf("{bold}{yellow}Freeing text7{reset}\n");
-	free(text7);ft_printf("Free ok\n");show_alloc_mem_plus();
-	ft_printf("{bold}{yellow}Freeing text6{reset}\n");
-	free(text6);ft_printf("Free ok\n");show_alloc_mem_plus();
-	ft_printf("{bold}{yellow}Freeing text8{reset}\n");
-	free(text8);ft_printf("Free ok\n");show_alloc_mem_plus();*/
+	ft_printf("{bold}{yellow}Freeing text10{reset}\n");
+	free(text10);ft_printf("Free ok\n");show_alloc_mem_plus();*/
 
-	//-- REALLOC TEST --//
-	/*char	*text = (char*)malloc(90000);
+	//-- REALLOC SMALLER TEST --//
+	/*char	*text = (char*)malloc(10000);
 	ft_strcpy(text, "bonjo");
 	ft_printf("Text = %p (%s)\n", text, text);
+	//char	*text2 = (char*)malloc(512);
 	show_alloc_mem_plus();
-	text = (char*)realloc(text, 9900);
+	text = (char*)realloc(text, 900);
 	//text[3] = 0;
 	ft_printf("Text = %p (%s)\n", text, text);
 	show_alloc_mem_plus();
 	free(text);
 	ft_printf("Free\n");
 	show_alloc_mem_plus();*/
-
-	/*char	*text1 = (char*)malloc(40000);
-	char	*text2 = (char*)malloc(32816);
-	show_alloc_mem_plus();
-	ft_printf("Free\n");
-	free(text2);*/
 
 	//-- VIM CRASH REPRODUCTION TEST --//
 
@@ -187,21 +179,28 @@ int		main(int ac, char **av)
 	text[43][0] = 'a';
 	text[43][120] = 'a';
 	text[45][0] = 'a';
-	text[45][606] = 'a';*/
+	text[45][606] = 'a';
+	show_alloc_mem_plus();*/
 
-	/*if (malloc(9223372036854775807) == NULL)
-		ft_printf("Too big malloc\n");*/
+	//-- MALLOC FAIL TEST --//
+	/*size_t nb = 9223372036854775807;
+	if (malloc(nb) == NULL)
+	{
+		ft_printf("Too big malloc\n");
+		perror("");
+	}
+	show_alloc_mem_plus();*/
+
 	//-- REALLOC TEST --//
-	char	*text0 = (char*)malloc(10);
+	/*char	*text0 = (char*)malloc(10);
 	show_alloc_mem_plus();
 	ft_printf("{yellow}Start of reallocs{reset}\n");
 	for (int i = 11; i < 100; i++)
 	{
 		text0 = (char*)realloc(text0, i);
-		ft_printf("Current realloc size = %d\n", i);
 		show_alloc_mem_plus();
 	}
-	free(text0);
+	free(text0);*/
 
 	//-- REALLOC DEFRAGMENTING TEST --//
 	/*char	*text = (char*)malloc(10);
@@ -210,7 +209,7 @@ int		main(int ac, char **av)
 	show_alloc_mem_plus();
 	free(text2);
 	show_alloc_mem_plus();
-	text = (char*)realloc(text, 11);
+	text = (char*)realloc(text, 15);
 	show_alloc_mem_plus();*/
 
 	/*char	*text = (char*)malloc(10);
@@ -230,15 +229,20 @@ int		main(int ac, char **av)
 	void	*ptr3 = malloc(50);
 	void	*ptr4 = malloc(50);
 	show_alloc_mem_plus();
-	ft_printf("\nFreeing ptr2 and 3\n");
+	ft_printf("\nFreeing ptr4 and 3\n");
 	free(ptr4);
+	show_alloc_mem_plus();
 	free(ptr3);
 	show_alloc_mem_plus();
 	ft_printf("\nNew malloc\n");
 	void *ptr5 = malloc(90);
+	show_alloc_mem_plus();
+	void *ptr6 = malloc(40);
+	show_alloc_mem_plus();
+	free(ptr5);
 	show_alloc_mem_plus();*/
 
-	//-- DEFRAG TEST --//
+	//-- MALLOC DEFRAG TEST --//
 	/*char	*text = (char*)malloc(90);
 	char	*text2 = (char*)malloc(90);
 	char	*text3 = (char*)malloc(90);
@@ -257,6 +261,9 @@ int		main(int ac, char **av)
 	show_alloc_mem_plus();
 	free(text2);
 	ft_printf("Free\n");
+	show_alloc_mem_plus();
+	text2 = (char*)malloc(95);
+	ft_printf("New malloc\n");
 	show_alloc_mem_plus();*/
 
 	/*char	*text1 = (char*)malloc(10);
@@ -295,7 +302,7 @@ int		main(int ac, char **av)
 	ft_printf("\n{bold}{cyan}Part 2: Reusing freed node with a different alignement and size{reset}\n\n");
 	ptr = malloc(1000);
 	ptr1 = malloc(1000);
-	ptr2 = malloc(1000);
+	ptr2 = malloc(1000);show_alloc_mem_plus();
 	free(ptr1);
 	show_alloc_mem_plus();
 	ptr1 = memalign(64, 512);
@@ -316,10 +323,10 @@ int		main(int ac, char **av)
 	free(ptr);show_alloc_mem_plus();
 	free(ptr1);show_alloc_mem_plus();
 	ft_printf("{bold}{green}Last free done. Res:\n{reset}");
-	show_alloc_mem_plus();
+	show_alloc_mem_plus();*/
 
 	// TEST1 //
-	ft_printf("\n{bold}{cyan}TEST1...{reset}\n");
+	/*ft_printf("\n{bold}{cyan}TEST1...{reset}\n");
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
 		void	*data;
@@ -350,16 +357,16 @@ int		main(int ac, char **av)
 		if (memcmp(cmp, data2[i], i) != 0) {
 			memcpy(zzzz, data2[i], i);
 			zzzz[i] = 0;
-			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted ( '%s' )", i, zzzz);
+			ft_dprintf(STDERR_FILENO, "Segment %lu is corrupted ( '%s' )", i, zzzz);
 			return -1;
 		}
 		free(data2[i]);
 	}
 	ft_printf("{bold}{green}TEST2 OK{reset}\n");
-	show_alloc_mem_plus();
+	show_alloc_mem_plus();*/
 
 	// TEST3 //
-	ft_printf("{bold}{cyan}TEST3...{reset}\n");
+	/*ft_printf("{bold}{cyan}TEST3...{reset}\n");
 	void *data3[MAX_ALLOC];
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
@@ -372,10 +379,10 @@ int		main(int ac, char **av)
 		free(data3[i]);
 	}
 	ft_printf("{bold}{green}TEST3 OK{reset}\n");
-	show_alloc_mem_plus();
+	show_alloc_mem_plus();*/
 
 	// TEST4 //
-	ft_printf("{bold}{cyan}TEST4...{reset}\n");
+	/*ft_printf("{bold}{cyan}TEST4...{reset}\n");
 	void *data4[MAX_ALLOC];
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
@@ -392,16 +399,16 @@ int		main(int ac, char **av)
 
 		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data4[i], i) != 0) {
-			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			ft_dprintf(STDERR_FILENO, "Segment %lu is corrupted", i);
 			return -1;
 		}
 		free(data4[i]);
 	}
 	ft_printf("{bold}{green}TEST4 OK{reset}\n");
-	show_alloc_mem_plus();
+	show_alloc_mem_plus();*/
 
 	// TEST5 //
-	ft_printf("{bold}{cyan}TEST5...{reset}\n");
+	/*ft_printf("{bold}{cyan}TEST5...{reset}\n");
 	void *data5[MAX_ALLOC];
 	for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 	{
@@ -415,7 +422,7 @@ int		main(int ac, char **av)
 
 		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data5[i], i) != 0) {
-			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			ft_dprintf(STDERR_FILENO, "Segment %lu is corrupted", i);
 			return -1;
 		}
 	}
@@ -425,7 +432,7 @@ int		main(int ac, char **av)
 
 		ft_memset(cmp, 'a', i);
 		if (memcmp(cmp, data5[i], i) != 0) {
-			ft_dprintf(STDERR_FILENO, "Segment %zu is corrupted", i);
+			ft_dprintf(STDERR_FILENO, "Segment %lu is corrupted", i);
 			return -1;
 		}
 		free(data5[i]);
@@ -444,9 +451,14 @@ int		main(int ac, char **av)
 		for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 		{
 			if (!(data6[i] = malloc(len)))
+			{
+				ft_printf("A malloc failed\n");
+				perror("");
 				return -1;
+			}
 			ft_memset(data6[i], 'a', len);
 		}
+		//ft_printf("Data init\n");
 		for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 		{
 			if (memcmp(cmp, data6[i], len) != 0)
@@ -455,6 +467,7 @@ int		main(int ac, char **av)
 				return -1;
 			}
 		}
+		//ft_printf("memcmp 1 ok\n");
 		for (size_t i = 1; i < MAX_ALLOC; i += INCR)
 		{
 			if (memcmp(cmp, data6[i], len) != 0)
@@ -464,6 +477,7 @@ int		main(int ac, char **av)
 			}
 			free(data6[i]);
 		}
+		//ft_printf("free ok\n");
 	}
 	ft_printf("{bold}{green}TEST6 OK{reset}\n");
 	show_alloc_mem_plus();*/
