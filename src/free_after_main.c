@@ -24,29 +24,21 @@ int		free_page(t_page **page, size_t type)
 	{
 		tmp = *page;
 		*page = (*page)->next;
-		//ft_printf("Freeing %p\n", tmp);
-		munmap(tmp, type);
-		// /ft_printf("Setting to null\n");
-		*page = NULL;
-		//ft_printf("Next\n");
+		if (type == LARGE)
+			munmap(tmp, tmp->used_space);
+		else
+			munmap(tmp, type);
 	}
 	return (0);
 }
 
  __attribute__ ((destructor)) void	free_after_main()
 {
-	ft_printf("Memory after main:\n");
-	show_alloc_mem_plus();
 	pthread_mutex_lock(&g_mutex);
-	//ft_printf("Freeing tiny pages\n");
 	free_page(&g_memory.tiny, TINY);
-	//ft_printf("Freeing small pages\n");
 	free_page(&g_memory.small, SMALL);
-	//ft_printf("Freeing large pages\n");
-	free_page(&g_memory.small, LARGE);
+	free_page(&g_memory.large, LARGE);
 	pthread_mutex_unlock(&g_mutex);
-	ft_printf("Memory after frees:\n");
-	show_alloc_mem_plus();
 	if (pthread_mutex_destroy(&g_mutex))
 		custom_error("Mutex destroy error\n");
 }
