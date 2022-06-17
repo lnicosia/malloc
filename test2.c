@@ -13,6 +13,5 @@ int	main()
 		free(addr);
 		i++;
 	}
-	show_alloc_mem_plus();
 	return (0);
 }

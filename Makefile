@@ -39,10 +39,10 @@ LDLIBS = $(LIBFT)
 
 LDFLAGS = -L $(LIBFT_DIR)
 
-LIB_RAW = 
+LIB_RAW =
 
 SRC_RAW =	malloc.c free.c show_alloc_mem.c realloc.c utils.c \
-			others.c
+			others.c free_after_main.c \
 
 SRC_SIZE = $(shell ls src | wc -l)
 $(eval SRC_SIZE=$(shell echo $$(($(SRC_SIZE) - 1))))
@@ -69,7 +69,7 @@ CFLAGS =	-Wall -Wextra -Werror -Wpadded -Wconversion -I $(INCLUDES_DIR) \
 		#$(OPTI_FLAGS) \
 
 NPROC = $(shell nproc)
-	
+
 #
 # Setting right flags and files dependencies to link external libs
 # according to user's os
@@ -120,7 +120,7 @@ I = 1
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES)
 	@printf $(YELLOW)"[$(I)/$(SRC_SIZE)] Compiling $<\n"$(RESET)
 	$(eval I=$(shell echo $$(($(I) + 1))))
-	gcc -c $< -o $@ $(CFLAGS) 
+	gcc -c $< -o $@ $(CFLAGS)
 
 $(FULLNAME): $(LIBFT) $(OBJ_DIR) $(OBJ)
 	@printf $(CYAN)"[INFO] Linking ${BIN_DIR}/${FULLNAME}\n"$(RESET)

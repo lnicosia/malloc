@@ -105,8 +105,6 @@ int		check_page(void *ptr, t_page *page, size_t type)
 				}
 				else
 					prev->next = page->next;
-				// Unmapping the actual memory
-				//munmap(page, type);
 			}
 			return (1);
 		}
